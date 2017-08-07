@@ -82,13 +82,15 @@ class menunavigation(object):
                     return (tabelspan[0],None)
         return None
             
-        
+    def getcloseTab(self):
+        self.View_toolbar.Click()
+        return self.View_toolbar.getelementbyattribute('tag name:a',getall =True)
         
         
 
 def init():
     global driver
-    driver=ClassSelenium.ClassSelenium("http://10.20.27.63:8080/am/login.htm,chrome")
+    driver=ClassSelenium.ClassSelenium("http://10.20.25.124:8080/am/login.htm,chrome")
     driver.getelementbyattribute("id:vc_op_code").sendkeys('8888')
     driver.getelementbyattribute('id:vc_op_password').sendkeys("123456")   #��
     driver.getelementbyattribute('id:login').Click()
@@ -100,7 +102,16 @@ def init():
     print(a[0].gettext())
     fbmenu = menu(menubody,0) 
     fbmenu.openallmenu()
-   
+    driver.getelementbyattribute('link text:系统管理').Click()#菜单
+    driver.getelementbyattribute('link text:系统配置管理').Click()#菜单
+    driver.getelementbyattribute('link text:用户管理').Click()#菜单
+    b = temtable.getcloseTab()[0].Click()
+    i =0
+    while i<5:
+        i+=1
+        temtable.zoom.Click()
+        time.sleep(1)
+        temtable.zoom.Click()
 if __name__ == '__main__':
     init()
     

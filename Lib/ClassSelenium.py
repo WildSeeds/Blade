@@ -136,7 +136,6 @@ class ClassSelenium():
         alertoper：对当前文本框的操作，accept为确定，dismiss为取消
                             获取弹出框的文本内容并返回
         """
-        ele.find_elements("tag name", "frame")
         framelist=ele.find_elements("tag name", "frame")
         iframelist=ele.find_elements("tag name", "iframe")
         framelist.extend(iframelist)
@@ -239,6 +238,8 @@ class ClassSelenium():
             #增加异常StaleElementReferenceException抓捕，防止出现对象刷新导致的对象获取失效
             except SeleniumExceptions.StaleElementReferenceException:
                 time.sleep(1)
+            except Exception as e:
+                print(e)
         if elements and assist:
             #根据辅助属性，找出筛检对象
             assistlist=assist.split(sep=",")
@@ -266,7 +267,10 @@ class ClassSelenium():
         if not elements:
             framelist=self.getallframe(farther)
             for eachframe in framelist:
-                self.switchtoframe(eachframe)
+                try:
+                    self.switchtoframe(eachframe)
+                except SeleniumExceptions.WebDriverException:
+                    break
                 elements=self._findelementbyattribute(key,value,assist,farther)
                 if not elements:
                     self.driver.switch_to.parent_frame()

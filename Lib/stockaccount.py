@@ -7,8 +7,6 @@ Created on 2017年7月21日
 
 import Lib.ClassSelenium as ClassSelenium
 import time
-import pickle
-from lib2to3.tests.support import driver
 from warnings import catch_warnings
 global driver
 global InputData
