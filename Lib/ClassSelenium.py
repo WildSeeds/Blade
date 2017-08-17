@@ -260,6 +260,7 @@ class ClassSelenium():
                             i+=1
                     else:
                         #正则表达式中需要做设定，必须以给定的字符串打头和结尾
+                        #print(e[0:indexnumber],'^'+e[indexnumber+1:]+'$',elements[i].get_attribute(e[0:indexnumber]))
                         if not (elements[i].get_attribute(e[0:indexnumber]) and re.search('^'+e[indexnumber+1:]+'$',elements[i].get_attribute(e[0:indexnumber]))):
                             elements.remove(elements[i])
                         else:
@@ -378,7 +379,39 @@ class ElementObject(ClassSelenium):
         else:
             print('元素对象不为table对象，对象类型为：'+self.gettagname())
             raise SeleniumError('元素对象不为table对象，对象类型为：'+self.gettagname())
-    
+    def gettablecellbytitleandvalue(self,titlename,value):
+        """
+        gettablecellbytitleandrow:根据列名和行数获取单元格元素对象
+        titlename:标题名字
+        rownumber:行数
+        """
+        if self.gettagname()!='table':
+            self = self.getelementbyattribute('tag name:table')
+        
+        titlenames=[]
+        #需要判断第一个是否为无标题全选框
+        titleelements=self.getelementbyattribute(r'tag name:thead').getelementbyattribute('tag name:tr').getelementbyattribute(r'tag name:td', True)
+        for each in titleelements:
+#             if each.gettext():
+#                 titlenames.append(each.gettext())
+#             else:
+#                 #如果不存在text属性，则以name属性代替
+#                 titlenames.append(each.getelementbyattribute('tag name:input').getattribute('name'))
+            titlenames.append(each.gettext())
+        #找出当前title在titles中的列数
+        titleindex=titlenames.index(titlename)
+        tabletextelements=self.getelementbyattribute(r'tag name:tbody').getelementbyattribute('tag name:tr', True)
+        for tablerowelement in tabletextelements:
+            #tablerowelement=tabletextelements[rownumber-1]
+            tablecellelements=tablerowelement.getelementbyattribute(r'tag name:td', True)
+            tablecellelement=tablecellelements[titleindex]
+            if tablecellelement.gettext() == value:
+                tablecellelement.Click()
+                return tablecellelement
+        raise SeleniumError('未找到列:'+titlename+'值'+value)
+            
+
+ 
     def getrowbytitleandtext(self,titlename,text):
         """
         getrowbytitleandrow:获取指定文本在表格中第一次出现的行数
@@ -452,7 +485,8 @@ class ElementObject(ClassSelenium):
         from selenium.webdriver.support.select import Select
         Select(self.eleobject).select_by_value(value)
         """
-
+    def is_displayed(self):
+        return self.eleobject.is_displayed()
 class SeleniumError(Exception):
     def __init__(self, value):
         self.value = value

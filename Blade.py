@@ -50,6 +50,7 @@ if __name__ == '__main__':
                     eachlist=each.split('=',1)
                     InputData[eachlist[0]]=eachlist[1]
                 exec('import '+LibName)
+                
                 exec(LibName+'.InputData=InputData')
                 exec(LibName+'.UIExcept=UIExcept')
                 result,message=eval(LibName+'.'+FunName+'()')

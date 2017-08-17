@@ -16,7 +16,15 @@ global driver
 global InputData
 global UIExcept
 
+#  b = driver.getelementbyattribute('css selector:.hc_selectbox-tree-div,display:block')
 
+def exceptioncheck(windriver):
+    try:
+        windriver.getelementbyattribute(r'css selector:.verify-tip-inner',getall = True)
+    except Exception as ex:
+        pass
+    else:
+        raise ClassSelenium.SeleniumError("css.verify-tip-inner:"+"输入值有误")
 
 def getheaderlist():
     #tableheader = driver._findelementbyattribute(r'css selector', '.hc-datagrid-header','',None) #瀹氫箟琛ㄦ牸鎶�
@@ -49,34 +57,64 @@ def getheaderlist():
          #   thtextlist = []
          #   thtextlist.append(temp)
         
-def SelectListData(k,v):
+def SelectListData(driver,k,v):
     '''k:鍒楀悕  v:鍒楀�� 
     '''
     i=1
     j=1
     elements=None
-    elements=driver._findelementbyattribute('css selector', '.hc-datagrid-header>table>tbody>tr>td','',None)
+    elements=driver.getelementbyattribute('css selector:.hc-datagrid-header>table>tbody>tr>td',getall = True)
     while i<=len(elements):
-        tt=driver._findelementbyattribute('css selector', '.hc-datagrid-header>table>tbody>tr>td:nth-child('+str(i)+')>div','',None)
-        xt=tt[0].text   # 閼挎粌宕�
+        tt=driver.getelementbyattribute('css selector:.hc-datagrid-header>table>tbody>tr>td:nth-child('+str(i)+')>div',getall=True)
+        xt=tt[0].gettext()   # 閼挎粌宕�
         if xt==k:
-            print(i)
             break
         i=i+1
     
-    element1s=driver._findelementbyattribute('css selector', '.hc-datagrid-body>table>tbody>tr','',None)
+    element1s=driver.getelementbyattribute('css selector:.hc-datagrid-body>table>tbody>tr',getall=True)
     while j<=len(element1s):    
-        ts=driver._findelementbyattribute('css selector', '.hc-datagrid-body>table>tbody>tr:nth-child('+str(j)+')>td:nth-child('+str(i)+')','',None)
-        print('.hc-datagrid-body>table>tbody>tr:nth-child('+str(j)+')>td:nth-child('+str(i)+')')
-        print(j)
-        xs=ts[0].text   # 閼挎粌宕�
+        ts=driver.getelementbyattribute('css selector:.hc-datagrid-body>table>tbody>tr:nth-child('+str(j)+')>td:nth-child('+str(i)+')',getall = True)
+        xs=ts[0].gettext()   # 閼挎粌宕�
         
         if xs==v:
-            print(j)
-            ts[0].click()
+            ts[0].Click()
             break
         j=j+1    
+def readonly(*kw):
 
+    for i in kw:
+        if not i.getattribute('readonly'):
+            return False
+    return True
+def notemptycheck(*kw):
+    for i in kw:
+        if i.gettext() == ''or i.gettext()== None:
+            return False
+        else:
+            return True
+     
+def htips(driver,value):
+    '''
+    driver传入driver
+    value传tips提示值，如果一直返回true，不一致返回false
+    '''
+    htip = driver.getelementbyattribute(r"xpath://div[@class='h_tips']").gettext();
+    return(value in htip)
+def msgfloat(driver,vtile,vbody,action,error='操作失败'):
+    '''
+    vtite:弹出标题
+    vbody:弹出窗提示文本
+    action：传入按钮文本 
+    error：抛异常文本信息
+    '''
+    h_msg_floatdiv = driver.getelementbyattribute('id:h_msg_floatdiv',getall=True)[0]
+    title = h_msg_floatdiv.getelementbyattribute('css selector:.m-message-header').gettext()
+    body = h_msg_floatdiv.getelementbyattribute('css selector:.m-body-words').gettext()
+    footer = h_msg_floatdiv.getelementbyattribute('css selector:.h_btndiv.m-message-footer').gettext()
+    if title !=vtile or (vbody not in body):
+        raise ClassSelenium.SeleniumError(error+"失败，原因:"+body)
+    h_msg_floatdiv.getelementbyattribute('tag name:button,text:'+action).Click()
+  
 if __name__ == '__main__':
     global driver
     driver=ClassSelenium.ClassSelenium("http://192.168.70.237:8080/am/login.htm,chrome")

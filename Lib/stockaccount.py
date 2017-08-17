@@ -7,7 +7,7 @@ Created on 2017年7月21日
 
 import Lib.ClassSelenium as ClassSelenium
 import time
-from warnings import catch_warnings
+from Lib.Public import * 
 global driver
 global InputData
 global UIExcept
@@ -110,12 +110,48 @@ def passCancel():
 
 
 def roleApply():
-    clicktable(0)
-    grid9=buttonmenu.getelementbyattribute('link text:角色分配')
-    grid9.Click()
-    addwin=driver.getelementbyattribute("id:logoutWin")
-    addwin.getelementbyattribute('tag name:button,text:取消').Click()
-    clicktable(0)
+    SelectListData(driver,'归属部门','webUI')
+    buttonmenu.getelementbyattribute('link text:角色分配').Click()
+    addwin=driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"]/div[2]')
+    addwin.getelementbyattribute('tag name:a,title:关闭').Click()
+    buttonmenu.getelementbyattribute('link text:角色分配').Click()
+    # 角色分配窗体
+    v1 = addwin.getelementbyattribute(r'xpath:descendant::label[@title="角色编号"]/following-sibling::*/descendant::*/input[last()]')
+    v2 = addwin.getelementbyattribute(r'xpath:descendant::label[@title="角色名称"]/following-sibling::*/descendant::*/input[last()]')
+    addwin.getelementbyattribute('tag name:button,text:清空').Click()
+    if  notemptycheck(v1,v2):
+        raise ClassSelenium.SeleniumExceptions("角色分配清空操作失败")
+    v1.sendkeys('3')
+    v2.sendkeys('3')
+    addwin.getelementbyattribute('tag name:button,text:查询').Click()
+    addwin.gettablecellbytitleandvalue('角色编号','3')
+    addwin.getelementbyattribute('tag name:button,text:角色分配').Click()
+    msgfloat(driver,'确认','请您确认是否提交','取消','角色分配')
+    addwin.getelementbyattribute('tag name:button,text:角色分配').Click()
+    msgfloat(driver,'确认','请您确认是否提交','确定','角色分配')
+    htips(driver,'操作成功')
+
+def oprightcopy():
+    SelectListData(driver,'归属部门','webUI')
+    buttonmenu.getelementbyattribute('link text:用户权限复制').Click()
+    addwin=driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"]/div[2]')
+    addwin.getelementbyattribute('tag name:a,title:关闭').Click()
+    buttonmenu.getelementbyattribute('link text:用户权限复制').Click()
+    # 角色分配窗体
+    v1 = addwin.getelementbyattribute(r'xpath:descendant::label[@title="用户编号"]/following-sibling::*/descendant::*/input[last()]')
+    v2 = addwin.getelementbyattribute(r'xpath:descendant::label[@title="用户名称"]/following-sibling::*/descendant::*/input[last()]')
+    addwin.getelementbyattribute('tag name:button,text:清空').Click()
+    if  notemptycheck(v1,v2):
+        raise ClassSelenium.SeleniumExceptions("角色分配清空操作失败")
+    v1.sendkeys('0001')
+    #v2.sendkeys('3')
+    addwin.getelementbyattribute('tag name:button,text:查询').Click()
+    SelectListData(addwin,'用户编号','0001')
+    addwin.getelementbyattribute('tag name:button,text:权限复制').Click()
+    msgfloat(driver,'确认','请您确认是否提交','取消','用户权限复制')
+    addwin.getelementbyattribute('tag name:button,text:权限复制').Click()
+    msgfloat(driver,'确认','请您确认是否提交','确定','用户权限复制')
+    htips(driver,'操作成功')
 
 def exceptioncheck(windriver):
     try:
@@ -155,5 +191,5 @@ def login():
     #return 'Pass',''
 if __name__ == '__main__':
     init()
-    login()
+    oprightcopy()
     end()
