@@ -168,7 +168,7 @@ class ClassSelenium():
             return False
         return findresult
     
-    def getelementbyattribute(self,attrdes,getall=None,farther=None,TIMEOUT=20):
+    def getelementbyattribute(self, attrdes: object, getall: object = None, farther: object = None, TIMEOUT: object = 20) -> object:
         timecount=0
         elements=None
         primary=False

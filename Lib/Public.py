@@ -17,7 +17,7 @@ global InputData
 global UIExcept
 
 #  b = driver.getelementbyattribute('css selector:.hc_selectbox-tree-div,display:block')
-
+#  css selector:.hc_selectbox-tree-div,style:[\s\S]*display: block;
 def exceptioncheck(windriver):
     try:
         windriver.getelementbyattribute(r'css selector:.verify-tip-inner',getall = True)
@@ -88,7 +88,7 @@ def readonly(*kw):
     return True
 def notemptycheck(*kw):
     for i in kw:
-        if i.gettext() == ''or i.gettext()== None:
+        if i.gettext() == ''or i.gettext()== None or i.getattribute('title') :
             return False
         else:
             return True

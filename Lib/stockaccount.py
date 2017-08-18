@@ -32,6 +32,7 @@ def init():
 
 def end():
     time.sleep(15)
+
     driver.close()
 
 

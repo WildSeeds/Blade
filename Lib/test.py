@@ -15,7 +15,9 @@ global UIExcept
 if __name__ == '__main__':
     a ='请您确认是否提交'
     b = '请您确认是否提交?'
-    if a  in b:
-        print('in')
+    if '123' ==None:
+        print(123)
     else:
-        print('not in')
+        print('321')
+
+        
