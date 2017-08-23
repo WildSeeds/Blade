@@ -205,6 +205,8 @@ class ClassSelenium():
             lennumber=len(elements)
             if lennumber==1:
                 timecount=1
+                if not elements[0].is_displayed():
+                    elements[0].location_once_scrolled_into_view
                 while (not elements[0].is_displayed()) and timecount<TIMEOUT:
                     time.sleep(1)
                     timecount+=1

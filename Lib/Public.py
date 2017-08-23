@@ -18,6 +18,7 @@ global UIExcept
 
 #  b = driver.getelementbyattribute('css selector:.hc_selectbox-tree-div,display:block')
 #  css selector:.hc_selectbox-tree-div,style:[\s\S]*display: block;
+# xpath:descendant::label[@title="{0}"]/following-sibling::*/descendant::*/input[@title]'.format(value)
 def exceptioncheck(windriver):
     try:
         windriver.getelementbyattribute(r'css selector:.verify-tip-inner',getall = True)
@@ -58,28 +59,55 @@ def getheaderlist():
          #   thtextlist.append(temp)
         
 def SelectListData(driver,k,v):
-    '''k:鍒楀悕  v:鍒楀�� 
+    '''k:列名  v:cell值��
     '''
     i=1
     j=1
     elements=None
-    elements=driver.getelementbyattribute('css selector:.hc-datagrid-header>table>tbody>tr>td',getall = True)
-    while i<=len(elements):
-        tt=driver.getelementbyattribute('css selector:.hc-datagrid-header>table>tbody>tr>td:nth-child('+str(i)+')>div',getall=True)
-        xt=tt[0].gettext()   # 閼挎粌宕�
-        if xt==k:
+    try:
+        elements=driver.getelementbyattribute('css selector:.hc-datagrid-header>table>tbody>tr>td',getall = True)
+    except:
+        elements = driver.getelementbyattribute('css selector:.hc-datagrid-body>table>thead>tr>td', getall=True)
+
+    for m in elements:
+        xt = m.gettext()  # 获取表头值�
+        if xt == k:
             break
-        i=i+1
+        i = i + 1
     
     element1s=driver.getelementbyattribute('css selector:.hc-datagrid-body>table>tbody>tr',getall=True)
-    while j<=len(element1s):    
-        ts=driver.getelementbyattribute('css selector:.hc-datagrid-body>table>tbody>tr:nth-child('+str(j)+')>td:nth-child('+str(i)+')',getall = True)
-        xs=ts[0].gettext()   # 閼挎粌宕�
+    for n in  element1s:
+        ts=n.getelementbyattribute('css selector:td:nth-child('+str(i)+')',getall = True)
+        xs=ts[0].gettext()   # 获取cell值�
         
         if xs==v:
             ts[0].Click()
             break
-        j=j+1    
+        j=j+1
+
+def SelectListDatastandard(driver,k,v):
+    '''k:列名  v:cell值��
+    '''
+    i=1
+    j=1
+    elements=None
+    elements=driver.getelementbyattribute('css selector:.hc-datagrid-body>table>thead>tr>td',getall = True)
+    while i<=len(elements):
+        tt=driver.getelementbyattribute('css selector:.hc-datagrid-body>table>thead>tr>td:nth-child('+str(i)+')>div',getall=True)
+        xt=tt[0].gettext()   # 获取表头值�
+        if xt==k:
+            break
+        i=i+1
+
+    element1s=driver.getelementbyattribute('css selector:.hc-datagrid-body>table>tbody>tr',getall=True)
+    while j<=len(element1s):
+        ts=driver.getelementbyattribute('css selector:.hc-datagrid-body>table>tbody>tr:nth-child('+str(j)+')>td:nth-child('+str(i)+')',getall = True)
+        xs=ts[0].gettext()   # 获取cell值�
+
+        if xs==v:
+            ts[0].Click()
+            break
+        j=j+1
 def readonly(*kw):
 
     for i in kw:
@@ -114,41 +142,162 @@ def msgfloat(driver,vtile,vbody,action,error='操作失败'):
     if title !=vtile or (vbody not in body):
         raise ClassSelenium.SeleniumError(error+"失败，原因:"+body)
     h_msg_floatdiv.getelementbyattribute('tag name:button,text:'+action).Click()
-  
+
+class form(object):
+    def __init__(self,driver,window:ElementObject):
+        self.driver = driver
+        self.window = window
+        if window.gettagname() =='form':
+            self.loanform=window
+        else:
+            self.loanform = window.getelementbyattribute('tag name;form')
+        self.hidediv = driver.getelementbyattribute('id:hc_hide_div')
+
+    def __getitem__(self, value):
+        self._getinput(value)
+        return self.curinputele
+    def _getinput(self,value):
+#         tempstr = 'xpath:descendant::label[@title="{0}"]/following-sibling::*/descendant::*/input[@title]'.format(value)
+        tempstr = 'xpath:descendant::label[@title="{0}"]/following-sibling::*/descendant::*/input'.format(value)
+        inputlist = self.loanform.getelementbyattribute(tempstr,getall='True')
+        if(len(inputlist) == 1):
+            self.curinputele = inputlist[0]
+        elif(len(inputlist) == 2):
+            self.curinputele = inputlist[1]
+        elif(len(inputlist) == 3):
+            self.curinputele = inputlist[1]
+        else:
+            raise ClassSelenium.SeleniumExceptions("Form有新的输入框类型出现，需要添加功能")
+        return self.curinputele
+    def _geteletype(self):
+
+        # 获取输入框的class属性，根据css属性不同判断输入框的类型
+        tempcss = self.curinputele.getattribute('class')
+
+        if 'u-textfield' in tempcss :
+            return 'str'
+        elif  'u-select' in tempcss:
+            if 'hc_select-tree' in tempcss:
+                return 'singtree'
+            elif  'combox_disabled' in tempcss:
+                return  'combox'
+#             elif self.curinputele.getattribute('multiple') == 'true':
+#                 return 'mulselect'
+            else:
+                return 'select'
+        elif 'u-calendar' in tempcss :
+            return 'calendar'
+    def _settextvalue(self,value):
+        self.curinputele.clear()
+        self.curinputele.Click()
+        self.curinputele.sendkeys(value)
+        #title = self.curinputele.getattribute('value title')
+        # if title != value:
+        #     raise ClassSelenium.SeleniumExceptions('文本控件输入值:{0} 不成功'.format(value))
+    def _setselevalue(self,value):
+        self.curinputele.Click()
+        temp = self.hidediv.getelementbyattribute('tag name:div,style:[\s\S]*display: block;[\s\S]*')
+        if  temp.getattribute('multiple_line') == 'true':   # 如果是多选框执行多选框赋值函数
+            self._setmulselevalue(value)
+        else:
+            tempstr = 'xpath:ul/li[@title ="{0}"]'.format(value)
+            listele = temp.getelementbyattribute(tempstr)
+            listele.Click()
+            title = self.curinputele.getattribute('title')
+            if title!=value:
+                raise ClassSelenium.SeleniumExceptions('单选框值:{0} 选择不成功'.format(value))
+    def _setmulselevalue(self,value):
+        '''
+            value:支持多个值传入，用','隔开
+        '''
+        #self.curinputele.Click()
+        temp = self.hidediv.getelementbyattribute('tag name:div,style:[\s\S]*display: block;[\s\S]*')
+        # 已经选择的全部清除
+        try:
+            listeles = temp.getelementbyattribute('xpath:ul/li[@class="h_cur"]',getall=True)
+            for i in listeles:
+                i.Click()
+        except Exception as e:
+            print("except",e)
+        values = set(value.split(','))
+        for i in values:
+            tempsrt = 'xpath:ul/li[@title ="{0}"]'.format(i)
+            listele = temp.getelementbyattribute(tempsrt)
+            listele.Click()
+        title = self.curinputele.getattribute('title')
+        if len(title)!=len(value):
+            raise ClassSelenium.SeleniumExceptions('多选框值:{0} 选择不成功'.format(value))
+        self.loanform.Click()
+    def _setcalendarvalue(self,value):
+        self.curinputele.clear()
+        self.curinputele.Click()
+        temp = self.driver.getelementbyattribute('xpath://div[@class="h_screen"]/following-sibling::div,style:[\s\S]*display: block;[\s\S]*')
+        self.curinputele.sendkeys(value)
+        self.curinputele.Click()
+        temp.getelementbyattribute('css selector:.day.active').Click()
+        inputdate = self.curinputele.getelementbyattribute('xpath:preceding-sibling::input',getall =True)[0]
+        title = inputdate.getattribute('value')
+        if title != value:
+            raise ClassSelenium.SeleniumExceptions('文本控件输入值:{0} 不成功'.format(value))
+        self.loanform.Click()
+    def _setsingtreevalue(self,value):
+        self.curinputele.Click()
+        self.curinputele.sendkeys(value[:1])
+        #temp = self.hidediv.getelementbyattribute('tag name:div,style:[\s\S]*display: block;[\s\S]*')
+        temp =  self.driver.getelementbyattribute('xpath://div[@class="h_screen"]/following-sibling::div/div[1],style:[\s\S]*display: block;')
+        listele = self.driver.getelementbyattribute(r'xpath:.//span[text()="{0}"]'.format("农业(大类)"))
+        listele.Click()
+        title = self.curinputele.getattribute('title')
+        if title!=value:
+            raise ClassSelenium.SeleniumExceptions('单选属性选择控件选择值:{0} 不成功'.format(value))
+
+    def setvalue(self,name,value):
+        self._getinput(name)
+        cureletype = self._geteletype()
+        if cureletype=='str':
+            self._settextvalue(value)
+        elif cureletype=='calendar':
+            self._setcalendarvalue(value)
+        elif cureletype=='singtree':
+            self._setsingtreevalue(value)
+        elif cureletype=='select':
+            self._setselevalue(value)
+    def printlabel(self):
+        x = input("请在Form输入值，按任意键继续")
+
+        labellist = self.loanform.getelementbyattribute('xpath:descendant::label[@title]',getall ='True') # 获取表单的所有输入框
+        for i in labellist:
+            try:
+                if i.is_displayed():
+                    lable = i.getattribute('title').strip(r'*').strip()
+
+                    title = self._getinput(lable).getattribute('title')
+
+                    print("loanform.setvalue('{0}', '{1}')".format(lable,title))
+                else:
+                    lable = i.getattribute('title').strip(r'*').strip()
+                    title = self._getinput(lable).getattribute('title')
+                    print("#loanform.setvalue('{0}', '{1}') # 属性隐藏".format(lable, title))
+            except Exception as e:
+                print(lable,e)
+                print("#loanform.setvalue('{0}') # {1}".format(lable,e))
+
+
 if __name__ == '__main__':
     global driver
-    driver=ClassSelenium.ClassSelenium("http://192.168.70.237:8080/am/login.htm,chrome")
+    driver=ClassSelenium.ClassSelenium("http://10.20.25.124:8080/am/login.htm,chrome")
     driver.getelementbyattribute("id:vc_op_code").sendkeys('8888')
     driver.getelementbyattribute('id:vc_op_password').sendkeys("123456")   #��
     driver.getelementbyattribute('id:login').Click()
     driver.getelementbyattribute('link text:系统管理').Click()#菜单
     driver.getelementbyattribute('link text:系统配置管理').Click()#菜单
-    driver.getelementbyattribute('link text:系统开关配置').Click()#菜单
+    driver.getelementbyattribute('link text:dbf上传配置管理').Click()#菜单
     #閼惧嘲褰囬悽銊﹀煕鐞涖劌宕�
     global operatable
 #     operatable=driver.getelementbyattribute('tag name:table,id:data_table_dataTable')
     #閼惧嘲褰囬悽銊﹀煕閸旂喕鍏橀懣婊冨礋
     global buttonmenu
-    # buttonmenu=driver.getelementbyattribute("xpath:.//*[@id='wrap_dataTable']/div[1]")
-    # #閼惧嘲褰囩悰銊ュ礋婢讹拷
-    # tableheader = driver.getelementbyattribute("id:head_dataTable")
-    # tableheadername =  getheaderlist(tableheader)
-    # print(tableheadername)
-    # ab = driver.getelementbyattribute(r"xpath:.//*[@id='head_dataTable']/tbody/tr/td[12]/div").gettext()
-    # print(ab)
-    # #閼惧嘲褰囩悰銊ュ礋娴ｏ拷
-    # tablebody = driver.getelementbyattribute("id:data_table_dataTable")
-    attrlist=['tag name','partial link text','link text','class name','id','name','css selector','xpath']
-    attrdes=':[^,]*','css selector:.hc-datagrid-header>#head_dataTable>tbody>tr>td:nth-child(15)>div'
-    #浠庡睘鎬у瓧绗︿覆涓壘鍑轰富灞炴�э紝浼樺厛鎵惧嚭tag name
-#     for attrstr in attrlist:
-#         if re.search(attrstr+':[^,]*',attrdes):
-#             primary=re.search(attrstr+':[^,]*', attrdes).group()
-#             assist=attrdes.replace(primary,'').strip(',')
-#             #assist=re.sub(primary+':[^,]*', '', attrdes).strip(',')
-#             break   
-#     primaryindex=primary.index(":")
-#     driver.getelementbyattribute('css selector:.hc-datagrid-header>#head_dataTable>tbody>tr>td:nth-child(15)>div').gettabletext()
-    a,b = getheaderlist()
-    print(a,b)
+
+    SelectListData(driver,'用户名','1212')
+
     pass

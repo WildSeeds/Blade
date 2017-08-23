@@ -47,6 +47,7 @@ class loanrival(object):
         loanform.setvalue('对手简称', '1233')
         loanform.setvalue('对手方名称', '1233')
         loanform.setvalue('行业类别', '1:基础产业')
+        loanform.setvalue('企业特征','2:大型企业')
         #loanform.setvalue('对手序号', '1233')
         self.upwindow.getelementbyattribute('tag name:button,text:查询').Click()
     
@@ -58,13 +59,71 @@ class loanrival(object):
       
     def add(self):
         self.downwindow.getelementbyattribute('link text:新增').Click()
-        addwin=driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"]/div[2]')
-        addwin.getelementbyattribute('tag name:button,text:取消').Click()
-        self.downwindow.getelementbyattribute('link text:新增').Click()
-        #/html/body/descendant::label[@title="部门编号"]/following-sibling::*/descendant::*/input[last()]
-        addwin.getelementbyattribute(r'xpath:descendant::label[@title="角色编号"]/following-sibling::*/descendant::*/input[last()]').sendkeys('3')
-        addwin.getelementbyattribute(r'xpath:descendant::label[@title="角色名称"]/following-sibling::*/descendant::*/input[last()]').sendkeys("3")
-        addwin.getelementbyattribute(r'xpath:descendant::label[@title="备注"]/following-sibling::*/descendant::*/input[last()]').sendkeys("webui")
+        driver.driver.switch_to_default_content()
+        framelist=driver.getallframe(driver.driver)
+        print(framelist)
+        #loanform.setvalue['对手简称']
+
+        driver.switchtoframe(framelist[-1])
+        addwindow = driver.getelementbyattribute('tag name:form,name:addForm')
+        driver.getelementbyattribute('tag name:button,text:重置').Click()
+        loanform = form(driver,addwindow)
+        # loanform.printlabel()
+        # return
+        loanform.setvalue('对手简称', 'webUI')
+        loanform.setvalue('对手方名称', 'webUI')
+        loanform.setvalue('对手类型', '非金融机构')
+        loanform.setvalue('角色分类', '抵、质押担保方')
+        # loanform.setvalue('对手性别', '') # 属性隐藏
+        # loanform.setvalue('机构分类', '产险公司') # 属性隐藏
+        # loanform.setvalue('出生日期', '') # 属性隐藏
+        loanform.setvalue('组织机构代码', '1000397')
+        loanform.setvalue('社会信用代码', '1000397')
+        loanform.setvalue('贷款卡号', '1000397')
+        # loanform.setvalue('证件类型', '') # 属性隐藏
+        # loanform.setvalue('证件号码', '') # 属性隐藏
+        loanform.setvalue('企业特征', '大型企业')
+        loanform.setvalue('企业性质', '企业法人(公司、非公司制企业法人)')
+        loanform.setvalue('行业分类', '基础产业')
+        loanform.setvalue('明细分类', '农业(大类)')
+        # loanform.setvalue('职业分类', '政府部门') # 属性隐藏
+        loanform.setvalue('归属国别', 'CHN:中华人民共和国')
+        loanform.setvalue('对手方子类', '银行类')
+        loanform.setvalue('内部评级', 'AAA')
+        loanform.setvalue('外部评级', 'AAA')
+        #loanform.setvalue('外部评级机构', '请选择')
+        loanform.setvalue('公司类型', '内资企业')
+        loanform.setvalue('注册类型', '工商注册号')
+        loanform.setvalue('登记注册号', '1000397')
+        loanform.setvalue('注册资本', '元')
+        loanform.setvalue('企业法人', '1000397')
+        loanform.setvalue('法人证件类型', '护照')
+        loanform.setvalue('法人证件代码', '1000397')
+        loanform.setvalue('企业成立日期', '20170821')
+        loanform.setvalue('登记开始日期', '20170821')
+        loanform.setvalue('登记到期日期', '20170821')
+        loanform.setvalue('国税登记证号', '1000397')
+        loanform.setvalue('地税登记证号', '1000397')
+        loanform.setvalue('是否上市', '是')
+        loanform.setvalue('上市地', '上海')
+        loanform.setvalue('股票代码', '1000397')
+        loanform.setvalue('是否集团', '是')
+        loanform.setvalue('经营类型', '联营企业')
+        loanform.setvalue('合作类型', '共管公司')
+        loanform.setvalue('关联类型', '无')
+        #loanform.setvalue('所属集团', '请选择')
+        loanform.setvalue('综合评级', 'AAA')
+        loanform.setvalue('资本金(元)', '1,000,397.00')
+        loanform.setvalue('总资产', '1000397')
+        loanform.setvalue('净资产', '1000397')
+        loanform.setvalue('通讯地址', '1000397')
+        loanform.setvalue('联系人', 'webUI')
+        loanform.setvalue('财务部电话', '1000397')
+        loanform.setvalue('电话', '1000397')
+        loanform.setvalue('传真', '1000397')
+        loanform.setvalue('邮编', '410082')
+        loanform.setvalue('邮箱', '1000397@qq.com')
+        return
         exceptioncheck(addwin)
         addwin.getelementbyattribute('tag name:button,text:确定').Click()
         msgfloat(driver,'确认','请您确认是否提交','取消','角色新增')
@@ -166,99 +225,8 @@ class loanrival(object):
         #driver.close()
         #return 'Pass',''
 
-class form(object):
-    def __init__(self,driver,window:ElementObject):
-        self.driver = driver
-        self.window = window
-        if window.gettagname() =='form':
-            self.loanform=window
-        else:
-            self.loanform = window.getelementbyattribute('tag name;form')
-        self.hidediv = driver.getelementbyattribute('id:hc_hide_div')
 
-    def __getitem__(self, value:String):
-        self._getinput(value)
-        return self.curinputele
-    def _getinput(self,value):
-        tempstr = 'xpath:descendant::label[@title="{0}"]/following-sibling::*/descendant::*/input[@title]'.format(value)
-        self.curinputele = self.loanform.getelementbyattribute(tempstr)
-        return self
-    def _geteletype(self):
 
-        # 获取输入框的class属性，根据css属性不同判断输入框的类型
-        tempcss = self.curinputele.getattribute('class')
-
-        if 'u-textfield' in tempcss :
-            return 'str'
-        elif  'u-select' in tempcss:
-            if 'hc_select-tree' in tempcss:
-                return 'singtree'
-            elif  'combox_disabled' in tempcss:
-                return  'combox'
-            elif self.curinputele.getattribute('multiple') == 'true':
-                return 'mulselect'
-            else:
-                return 'singselect'
-        elif 'u-calendar' in tempcss :
-            return 'calendar'
-    def _settextvalue(self,value):
-        self.curinputele.clear()
-        self.curinputele.sendkeys(value)
-    def _setsinselevalue(self,value):
-        self.curinputele.Click()
-        temp = self.hidediv.getelementbyattribute('tag name:div,style:[\s\S]*display: block;]')
-        tempstr = 'xpath:ul/li[@title ={0}]'.format(value)
-        listele = temp.getelementbyattribute(tempstr)
-        listele.Click()
-        title = self.curinputele.getattribute('title')
-        if title!=value:
-            raise ClassSelenium.SeleniumExceptions('单选框值:{0} 选择不成功'.format(value))
-    def _setmulselevalue(self,value):
-        '''
-            value:支持多个值传入，用','隔开
-        '''
-        self.curinputele.Click()
-        temp = self.hidediv.getelementbyattribute('tag name:div,style:[\s\S]*display: block;')
-        # 已经选择的全部清除
-        try:
-            listeles = temp.getelementbyattribute('xpath:ul/li[class="h_cur"]',getall=True)
-            for i in listeles:
-                i.Click()
-        except :
-            pass
-        values = set(value.split(','))
-        print(values)
-        for i in values:
-            tempsrt = 'xpath:ul/li[@title ={0}]'.format(i)
-            listele = temp.getelementbyattribute(tempsrt,getall=True)
-            listele.Click()
-        title = self.curinputele.getattribute('title')
-        if len(title)!=len(value):
-            raise ClassSelenium.SeleniumExceptions('多选框值:{0} 选择不成功'.format(value))
-    def _setcalendarvalue(self,value):
-        self.curinputele.clear()
-        self.curinputele.sendkeys(value)
-    def _setsingtreevalue(self,value):
-        self.curinputele.Click()
-        temp = self.hidediv.getelementbyattribute('tag name:div,style:[\s\S]*display: block;]')
-        listele = temp.getelementbyattribute('link text:{0}'.format(value))
-        listele.Click()
-        title = self.curinputele.getattribute('title')
-        if title!=value:
-            raise ClassSelenium.SeleniumExceptions('单选属性选择控件选择值:{0} 不成功'.format(value)) 
-    def setvalue(self,name,value):
-        self._getinput(name)
-        cureletype = self._geteletype()
-        if cureletype=='str':
-            self._settextvalue(value)
-        elif cureletype=='calendar':
-            self._setcalendarvalue(value)
-        elif cureletype=='singtree':
-            self._setsingtreevalue(value)
-        elif cureletype=='mulselect':
-            self._setmulselevalue(value)
-        elif cureletype=='singselect':
-            self._setsinselevalue(value)
 
 class  branchmanager(object):
     def __init__(self,driver,window):
@@ -300,7 +268,7 @@ class  branchmanager(object):
         v2.sendkeys('')
         v3.sendkeys('webUI')
         #b = driver.getelementbyattribute('id:hc_hide_div-tree-vc_branch_id_opbquery1')
-        b = driver.getelementbyattribute(r'css selector:.hc_selectbox-tree-div,style:[\s\S]*display: block;')
+        b = driver.getelementbyattribute(r'css selector:.hc_selectbox-tree-div,style:[\s\S]*display: block;[\s\S]*')
        
         c = b.getelementbyattribute(r'xpath:descendant::a[@title="'+'webUI'+'"]/preceding-sibling::span[last()-1]')
         c.Click()
@@ -381,12 +349,14 @@ class  branchmanager(object):
       
 if __name__ == '__main__':
     init()
+    #beginform = driver.getallframe(driver.driver)
     role1 =loanrival(driver)
-    role1.search()
+    #role1.search()
+    role1.add()
     #role1.add()
     #role1.modify()
     #role1.delete()
     #role1.rolemanageadd()
     #role1.delete()
     
-    role1.end()
+    #role1.end()
