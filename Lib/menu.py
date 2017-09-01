@@ -9,7 +9,7 @@ import Lib.ClassSelenium as ClassSelenium
 import time
 import pickle
 import builtins
-from lib2to3.tests.support import driver
+#from lib2to3.tests.support import driver
 from warnings import catch_warnings
 global driver
 global InputData
@@ -64,8 +64,9 @@ class menu(object):
             
             
 class menunavigation(object):
-    def __init__(self,menunavigation):
-        self.menunavigationself = menunavigation
+    def __init__(self,driver):
+        self.driver = driver
+        self.menunavigationself =self.driver.getelementbyattribute(r'css selector:.h-screen-tab')
         self.forward = menunavigation.getelementbyattribute('xpath:div[1]')
         self.label=menunavigation.getelementbyattribute('xpath:div[2]')
         self.backward = menunavigation.getelementbyattribute('xpath:div[3]')
@@ -91,7 +92,7 @@ class menunavigation(object):
 def init():
     global driver
     driver=ClassSelenium.ClassSelenium("http://10.20.25.124:8080/am/login.htm,chrome")
-    driver.getelementbyattribute("id:vc_op_code").sendkeys('8888')
+    driver.getelementbyattribute("id:vc_op_code").sendkeys('yq124')
     driver.getelementbyattribute('id:vc_op_password').sendkeys("123456")   #��
     driver.getelementbyattribute('id:login').Click()
     menubody = driver.getelementbyattribute(r'css selector:.h-menu-body>ul')
@@ -100,8 +101,8 @@ def init():
     a = temtable.getmenutable('主页')
     a[0].Click()
     print(a[0].gettext())
-    fbmenu = menu(menubody,0) 
-    fbmenu.openallmenu()
+    #fbmenu = menu(menubody,0)
+    #fbmenu.openallmenu()
     driver.getelementbyattribute('link text:系统管理').Click()#菜单
     driver.getelementbyattribute('link text:系统配置管理').Click()#菜单
     driver.getelementbyattribute('link text:用户管理').Click()#菜单

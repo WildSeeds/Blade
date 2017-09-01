@@ -69,7 +69,18 @@ class loanrival(object):
         driver.getelementbyattribute('tag name:button,text:重置').Click()
         loanform = form(driver,addwindow)
         # loanform.printlabel()
-        # return
+
+        #外部评级机构 对手方选择
+        loanform['外部评级机构'].getelementbyattribute('xpath:following-sibling::i').Click()
+        loanformfloatwindow = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"]/div[2]')
+        loanwindow = chooseloanrival(driver,loanformfloatwindow)
+        loanwindow.fastserach('136717','菲克力12138','非金融机构')
+
+        # #所属集团 对手方选择
+        # loanform['所属集团'].getelementbyattribute('xpath:following-sibling::i').Click()
+        # chooseloanrival(driver,driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"]/div[2]')).fastserach('136717', '菲克力12138', '非金融机构')
+        # #return
+        #driver.getelementbyattribute('tag name:button,text:确定').Click()
         loanform.setvalue('对手简称', 'webUI')
         loanform.setvalue('对手方名称', 'webUI')
         loanform.setvalue('对手类型', '非金融机构')
@@ -123,47 +134,143 @@ class loanrival(object):
         loanform.setvalue('传真', '1000397')
         loanform.setvalue('邮编', '410082')
         loanform.setvalue('邮箱', '1000397@qq.com')
-        return
-        exceptioncheck(addwin)
-        addwin.getelementbyattribute('tag name:button,text:确定').Click()
-        msgfloat(driver,'确认','请您确认是否提交','取消','角色新增')
-        addwin.getelementbyattribute('tag name:button,text:确定').Click()
-        msgfloat(driver,'确认','请您确认是否提交','确定','角色新增')
-        htips(driver,'操作成功');
-        self.search()
+        driver.getelementbyattribute('tag name:button,text:确定').Click()
+        exceptioncheck(addwindow)
+        msgfloat(driver,'提示','操作成功','确定','对手方新增')
     
     def modify(self):
-        SelectListData(driver,'角色名称','3')
+        SelectListData(driver,'对手简称','webUI')
         self.downwindow.getelementbyattribute('link text:修改').Click()
-        addwin=driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"]/div[2]')
-        addwin.getelementbyattribute('tag name:button,text:取消').Click()
-        self.downwindow.getelementbyattribute('link text:修改').Click()
-        #/html/body/descendant::label[@title="部门编号"]/following-sibling::*/descendant::*/input[last()]
-        v1 = addwin.getelementbyattribute(r'xpath:descendant::label[@title="角色编号"]/following-sibling::*/descendant::*/input[last()]')
-        v2 = addwin.getelementbyattribute(r'xpath:descendant::label[@title="角色名称"]/following-sibling::*/descendant::*/input[last()]')
-        v3 = addwin.getelementbyattribute(r'xpath:descendant::label[@title="备注"]/following-sibling::*/descendant::*/input[last()]')
-        if not readonly(v1):
-            raise ClassSelenium.SeleniumError("角色编号非只读")
-        v2.clear()
-        v2.sendkeys(3)
-        v3.clear()
-        v3.sendkeys('webui')
-        exceptioncheck(addwin)
-        addwin.getelementbyattribute('tag name:button,text:确定').Click()
-        msgfloat(driver,'确认','请您确认是否提交','取消','角色修改')
-        addwin.getelementbyattribute('tag name:button,text:确定').Click()
-        msgfloat(driver,'确认','请您确认是否提交','确定','角色修改')
-        htips(driver,'操作成功');
-        self.search()
+        driver.driver.switch_to_default_content()
+        framelist = driver.getallframe(driver.driver)
+        print(framelist)
+        # loanform.setvalue['对手简称']
+
+        driver.switchtoframe(framelist[-1])
+        addwindow = driver.getelementbyattribute('tag name:form,name:editForm')
+        driver.getelementbyattribute('tag name:button,text:重置').Click()
+        loanform = form(driver,addwindow)
+        # loanform.printlabel()
+
+        # 外部评级机构 对手方选择
+        loanform['外部评级机构'].getelementbyattribute('xpath:following-sibling::i').Click()
+        loanformfloatwindow = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"]/div[2]')
+        loanwindow = chooseloanrival(driver, loanformfloatwindow)
+        loanwindow.fastserach('136717', '菲克力12138', '非金融机构')
+
+        # #所属集团 对手方选择
+        # loanform['所属集团'].getelementbyattribute('xpath:following-sibling::i').Click()
+        # chooseloanrival(driver,driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"]/div[2]')).fastserach('136717', '菲克力12138', '非金融机构')
+        # #return
+        # driver.getelementbyattribute('tag name:button,text:确定').Click()
+        loanform.setvalue('对手简称', 'webUI')
+        loanform.setvalue('对手方名称', 'webUI')
+        loanform.setvalue('对手类型', '非金融机构')
+        loanform.setvalue('角色分类', '抵、质押担保方')
+        # loanform.setvalue('对手性别', '') # 属性隐藏
+        # loanform.setvalue('机构分类', '产险公司') # 属性隐藏
+        # loanform.setvalue('出生日期', '') # 属性隐藏
+        loanform.setvalue('组织机构代码', '1000397')
+        loanform.setvalue('社会信用代码', '1000397')
+        loanform.setvalue('贷款卡号', '1000397')
+        # loanform.setvalue('证件类型', '') # 属性隐藏
+        # loanform.setvalue('证件号码', '') # 属性隐藏
+        loanform.setvalue('企业特征', '大型企业')
+        loanform.setvalue('企业性质', '企业法人(公司、非公司制企业法人)')
+        loanform.setvalue('行业分类', '基础产业')
+        loanform.setvalue('明细分类', '农业(大类)')
+        # loanform.setvalue('职业分类', '政府部门') # 属性隐藏
+        loanform.setvalue('归属国别', 'CHN:中华人民共和国')
+        loanform.setvalue('对手方子类', '银行类')
+        loanform.setvalue('内部评级', 'AAA')
+        loanform.setvalue('外部评级', 'AAA')
+        # loanform.setvalue('外部评级机构', '请选择')
+        loanform.setvalue('公司类型', '内资企业')
+        loanform.setvalue('注册类型', '工商注册号')
+        loanform.setvalue('登记注册号', '1000397')
+        loanform.setvalue('注册资本', '元')
+        loanform.setvalue('企业法人', '1000397')
+        loanform.setvalue('法人证件类型', '护照')
+        loanform.setvalue('法人证件代码', '1000397')
+        loanform.setvalue('企业成立日期', '20170821')
+        loanform.setvalue('登记开始日期', '20170821')
+        loanform.setvalue('登记到期日期', '20170821')
+        loanform.setvalue('国税登记证号', '1000397')
+        loanform.setvalue('地税登记证号', '1000397')
+        loanform.setvalue('是否上市', '是')
+        loanform.setvalue('上市地', '上海')
+        loanform.setvalue('股票代码', '1000397')
+        loanform.setvalue('是否集团', '是')
+        loanform.setvalue('经营类型', '联营企业')
+        loanform.setvalue('合作类型', '共管公司')
+        loanform.setvalue('关联类型', '无')
+        # loanform.setvalue('所属集团', '请选择')
+        loanform.setvalue('综合评级', 'AAA')
+        loanform.setvalue('资本金(元)', '1,000,397.00')
+        loanform.setvalue('总资产', '1000397')
+        loanform.setvalue('净资产', '1000397')
+        loanform.setvalue('通讯地址', '1000397')
+        loanform.setvalue('联系人', 'webUI')
+        loanform.setvalue('财务部电话', '1000397')
+        loanform.setvalue('电话', '1000397')
+        loanform.setvalue('传真', '1000397')
+        loanform.setvalue('邮编', '410082')
+        loanform.setvalue('邮箱', '1000397@qq.com')
+        driver.getelementbyattribute('tag name:button,text:确定').Click()
+        exceptioncheck(addwindow)
+        msgfloat(driver, '提示', '操作成功', '确定', '对手方修改')
+
     def delete(self):
-        SelectListData(driver,'角色名称','3')
+        SelectListData(driver, '对手简称', 'webUI')
         self.downwindow.getelementbyattribute('link text:删除').Click()
-        msgfloat(driver,'确认','请您确认是否删除','取消','角色删除')
+        msgfloat(driver,'提示','您确定要删除对手方吗','取消','对手方删除')
         self.downwindow.getelementbyattribute('link text:删除').Click()
-        msgfloat(driver,'确认','请您确认是否删除','确定','角色删除')
+        msgfloat(driver, '提示', '您确定要删除对手方吗', '确定', '对手方删除')
         htips(driver,'操作成功');
         self.search()
-    
+
+    def addstockholder(self):
+        SelectListData(driver, '对手简称', 'webUI1')
+        self.downwindow.getelementbyattribute('link text:股东信息').Click()
+        addwin = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"][last()]/div[2]')
+        mystockholder = Stockholderinfo(driver,addwin)
+        mystockholder.add()
+
+    def modifystockholder(self):
+        SelectListData(driver, '对手简称', 'webUI1')
+        self.downwindow.getelementbyattribute('link text:股东信息').Click()
+        addwin = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"][last()]/div[2]')
+        mystockholder = Stockholderinfo(driver, addwin)
+        mystockholder.modify()
+
+    def deletestockholder(self):
+        SelectListData(driver, '对手简称', 'webUI1')
+        self.downwindow.getelementbyattribute('link text:股东信息').Click()
+        addwin = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"][last()]/div[2]')
+        mystockholder = Stockholderinfo(driver, addwin)
+        mystockholder.delete()
+
+    def addmanager(self):
+        SelectListData(driver, '对手简称', 'webUI1')
+        self.downwindow.getelementbyattribute('link text:高管信息').Click()
+        addwin = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"][last()]/div[2]')
+        mystockholder = Stockholderinfo(driver, addwin)
+        mystockholder.add()
+
+    def modifymanager(self):
+        SelectListData(driver, '对手简称', 'webUI1')
+        self.downwindow.getelementbyattribute('link text:高管信息').Click()
+        addwin = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"][last()]/div[2]')
+        mystockholder = Stockholderinfo(driver, addwin)
+        mystockholder.modify()
+
+    def deletemanager(self):
+        SelectListData(driver, '对手简称', 'webUI1')
+        self.downwindow.getelementbyattribute('link text:高管信息').Click()
+        addwin = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"][last()]/div[2]')
+        mystockholder = Stockholderinfo(driver, addwin)
+        mystockholder.delete()
+
     def rolemanageadd(self):
         SelectListData(driver,'角色名称','3')
         self.window.getelementbyattribute('link text:批量分配角色').Click()
@@ -226,7 +333,61 @@ class loanrival(object):
         #return 'Pass',''
 
 
+class Stockholderinfo(object):
+    def __init__(self,driver,window):
+        self.driver = driver
+        self.window = window
 
+    def add(self):
+        self.window.getelementbyattribute('link text:新增').Click()
+        time.sleep(1)
+        #addwin = driver.getelementbyattribute(r"xpath:.//*[@id='addWin']",getall =True)[-1]
+
+        addwin = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"][last()]/div[2]')
+        #print(len(a))
+        self.subform = form(driver,addwin)
+        #addwin.getelementbyattribute('tag name:button,text:确定').Click()
+        if not readonly(self.subform['对手方']):
+            raise ClassSelenium.SeleniumExceptions('对手方字段非只读')
+
+        self.subform.setvalue('股东名称','webUI')
+        self.subform.setvalue('股东类别','1:个人')
+        self.subform.setvalue('关联关系','1:大股东')
+        self.subform.setvalue('证件类型','11:户口簿')
+        self.subform.setvalue('证件号码','1231231213')
+        self.subform.setvalue('持股比例(%)','12')
+        self.subform.button('确定')
+        # 弹出提示信息begin
+        msgfloat(driver, '提示', '操作成功', '确定', '股东信息新增')
+
+
+    def modify(self):
+        SelectListData(self.window,'股东名称','webUI')
+        self.window.getelementbyattribute('link text:修改').Click()
+        time.sleep(1)
+        # addwin = driver.getelementbyattribute(r"xpath:.//*[@id='addWin']",getall =True)[-1]
+
+        addwin = driver.getelementbyattribute(r'xpath://child::div[@style="display: block;"][last()]/div[2]')
+        # print(len(a))
+        self.subform = form(driver, addwin)
+        # addwin.getelementbyattribute('tag name:button,text:确定').Click()
+        if not readonly(self.subform['对手方']):
+            raise ClassSelenium.SeleniumExceptions('对手方字段非只读')
+
+        self.subform.setvalue('股东名称', 'webUI')
+        self.subform.setvalue('股东类别', '1:个人')
+        self.subform.setvalue('关联关系', '1:大股东')
+        self.subform.setvalue('证件类型', '11:户口簿')
+        self.subform.setvalue('证件号码', '1231231213')
+        self.subform.setvalue('持股比例(%)', '12')
+        self.subform.button('确定')
+        # 弹出提示信息begin
+        msgfloat(driver, '提示', '操作成功', '确定', '股东信息修改')
+    def delete(self):
+        SelectListData(self.window, '股东名称', 'webUI')
+        self.window.getelementbyattribute('link text:删除').Click()
+        time.sleep(1)
+        msgfloat(driver, '提示', '您确定要删除股东吗', '确定', '股东信息删除')
 
 class  branchmanager(object):
     def __init__(self,driver,window):
@@ -344,7 +505,8 @@ class  branchmanager(object):
         htips(self.window,'请至少选择一条记录')
         self.divdel.Click()
         htips(self.window,'请至少选择一条记录')
-        
+
+
    
       
 if __name__ == '__main__':
@@ -352,7 +514,7 @@ if __name__ == '__main__':
     #beginform = driver.getallframe(driver.driver)
     role1 =loanrival(driver)
     #role1.search()
-    role1.add()
+    role1.deletestockholder()
     #role1.add()
     #role1.modify()
     #role1.delete()

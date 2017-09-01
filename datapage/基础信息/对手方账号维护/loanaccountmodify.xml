@@ -1,0 +1,31 @@
+<TEST_PACK note="对手方银行账户信息新增">
+  <Test>
+  	<sub id="1000187" pack_ver="32">
+      <inparams>
+        <in name="账号" value="8888"/>
+        <in name="密码" value="123456"/>
+        <in name="对手序号_s" value="136721"/>
+        <in name="对手简称_s" value="webUI1"/>
+        <in name="银行账号_s" value="12312323"/>
+        <in name="表格列名" value="对手简称"/>
+        <in name="表格列值" value="webUI1"/>
+        <in name="对手方账户状态_s" value="正常,暂存"/>
+        <in name="对手名称" value="136721"/>
+        <in name="银行总行" value="18399"/>
+        <in name="银行账户" value="webUI"/>
+        <in name="银行名称" value="webUI"/>
+        <in name="账户名称" value="webUI"/>
+        <in name="省份" value="32:江苏省"/>
+        <in name="城市" value="3201:南京市"/>
+        <in name="支付系统号" value="321321"/>
+        <in name="联行号" value="321321"/>
+        <in name="是否内部账户" value="1:银行账户"/>
+
+      </inparams>
+      <UIexcept>
+        <in name='UIexceptinfo' value='test'/>
+      </UIexcept>
+    </sub>
+    
+  </Test>
+</TEST_PACK>
