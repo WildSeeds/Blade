@@ -1,0 +1,608 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Lib.ClassSelenium &#8212; bladedoc 1.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Lib.ClassSelenium 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">selenium</span> <span class="k">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.action_chains</span> <span class="k">import</span> <span class="n">ActionChains</span>
+<span class="kn">from</span> <span class="nn">selenium.common</span> <span class="k">import</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">SeleniumExceptions</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.keys</span> <span class="k">import</span> <span class="n">Keys</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.remote.webelement</span> <span class="k">import</span> <span class="n">WebElement</span>
+<span class="kn">from</span> <span class="nn">Lib.Common</span> <span class="k">import</span> <span class="n">toolfolderpath</span><span class="p">,</span><span class="n">flag</span>
+<div class="viewcode-block" id="ClassSelenium"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium">[文档]</a><span class="k">class</span> <span class="nc">ClassSelenium</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    classdocs</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mythread</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mythreadname</span><span class="o">=</span><span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1">#使用，分割，获取浏览器类型</span>
+            <span class="n">temp</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;，&#39;</span><span class="p">,</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">browsertype</span><span class="o">=</span><span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="n">browsertype</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;firefox&#39;</span>
+            <span class="k">if</span> <span class="n">browsertype</span><span class="o">==</span><span class="sa">r</span><span class="s1">&#39;firefox&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">=</span><span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">#获取当前系统是32位还是64位</span>
+                <span class="kn">import</span> <span class="nn">platform</span>
+                <span class="n">osbit</span><span class="o">=</span><span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">browsertype</span><span class="o">==</span><span class="sa">r</span><span class="s1">&#39;ie&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mythreadname</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;IEDriverServer.exe&#39;</span>
+                    <span class="k">if</span> <span class="n">osbit</span><span class="o">==</span><span class="s1">&#39;64bit&#39;</span><span class="p">:</span>
+                        <span class="n">exepath</span><span class="o">=</span><span class="n">toolfolderpath</span><span class="o">+</span><span class="sa">r</span><span class="s1">&#39;IEDriverServer_x64&#39;</span><span class="o">+</span><span class="n">flag</span><span class="o">+</span><span class="sa">r</span><span class="s1">&#39;IEDriverServer.exe&#39;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">exepath</span><span class="o">=</span><span class="n">toolfolderpath</span><span class="o">+</span><span class="sa">r</span><span class="s1">&#39;IEDriverServer_win32&#39;</span><span class="o">+</span><span class="n">flag</span><span class="o">+</span><span class="sa">r</span><span class="s1">&#39;IEDriverServer.exe&#39;</span>
+                <span class="k">elif</span> <span class="n">browsertype</span><span class="o">==</span><span class="sa">r</span><span class="s1">&#39;chrome&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mythreadname</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;chromedriver.exe&#39;</span>
+                    <span class="n">exepath</span><span class="o">=</span><span class="n">toolfolderpath</span><span class="o">+</span><span class="sa">r</span><span class="s1">&#39;chromedriver&#39;</span><span class="o">+</span><span class="n">flag</span><span class="o">+</span><span class="sa">r</span><span class="s1">&#39;chromedriver.exe&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;请确认初始化表格中，浏览器类型是否书写正确，目前只支持：ie、firefox和chrome&#39;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span>
+                <span class="n">webdriver_driver</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">exepath</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;webdriver.driver&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">webdriver_driver</span>
+                <span class="k">if</span> <span class="n">browsertype</span><span class="o">==</span><span class="sa">r</span><span class="s1">&#39;ie&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Ie</span><span class="p">(</span><span class="n">webdriver_driver</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">browsertype</span><span class="o">==</span><span class="sa">r</span><span class="s1">&#39;chrome&#39;</span><span class="p">:</span>
+                    <span class="n">options</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">ChromeOptions</span><span class="p">()</span>
+                    <span class="n">options</span><span class="o">.</span><span class="n">add_experimental_option</span><span class="p">(</span><span class="s2">&quot;excludeSwitches&quot;</span><span class="p">,[</span><span class="s2">&quot;ignore-certificate-errors&quot;</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">webdriver_driver</span><span class="p">,</span><span class="n">chrome_options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">maximize_window</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">aa</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">aa</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="ClassSelenium.classtype"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.classtype">[文档]</a>    <span class="k">def</span> <span class="nf">classtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">r</span><span class="s1">&#39;ui&#39;</span></div>
+    
+<div class="viewcode-block" id="ClassSelenium.switchtoframe"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.switchtoframe">[文档]</a>    <span class="k">def</span> <span class="nf">switchtoframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">framename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">framename</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">framename</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">switch_to_frame</span><span class="p">(</span><span class="n">framename</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">framename</span><span class="p">,</span> <span class="n">ElementObject</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">switch_to_frame</span><span class="p">(</span><span class="n">framename</span><span class="o">.</span><span class="n">changetoWebElement</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">switch_to_default_content</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="ClassSelenium.getalerttext"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.getalerttext">[文档]</a>    <span class="k">def</span> <span class="nf">getalerttext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">alertoper</span><span class="o">=</span><span class="s1">&#39;accept&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        alertoper：对当前文本框的操作，accept为确定，dismiss为取消</span>
+<span class="sd">                            获取弹出框的文本内容并返回</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alert</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">switch_to_alert</span><span class="p">()</span>
+        <span class="n">alerttext</span><span class="o">=</span><span class="n">alert</span><span class="o">.</span><span class="n">text</span>
+        <span class="k">if</span> <span class="n">alertoper</span><span class="o">==</span><span class="s1">&#39;dismiss&#39;</span><span class="p">:</span>
+            <span class="n">alert</span><span class="o">.</span><span class="n">dismiss</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alert</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">alerttext</span></div>
+    
+<div class="viewcode-block" id="ClassSelenium.closecurrwindow"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.closecurrwindow">[文档]</a>    <span class="k">def</span> <span class="nf">closecurrwindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        closecurrwindow:关闭当前网页窗口</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="ClassSelenium.switchtowindow"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.switchtowindow">[文档]</a>    <span class="k">def</span> <span class="nf">switchtowindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">title_name</span><span class="p">,</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        switchtowindow:切换当前浏览器中的不同标签页，直到找到指定的标题名的标签页</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">curr_time</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">while</span> <span class="n">curr_time</span><span class="o">&lt;</span><span class="n">timeout</span><span class="p">:</span>
+            <span class="n">all_handles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">window_handles</span>
+            <span class="k">for</span> <span class="n">handle</span> <span class="ow">in</span> <span class="n">all_handles</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">switch_to_window</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+                <span class="n">curr_title_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">title</span>
+                <span class="k">if</span> <span class="n">curr_title_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">==</span><span class="n">title_name</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="k">return</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">curr_time</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;没有找到title为&quot;</span><span class="o">+</span><span class="n">title_name</span><span class="o">+</span><span class="s2">&quot;的网页，请确认!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="s2">&quot;没有找到title为&quot;</span><span class="o">+</span><span class="n">title_name</span><span class="o">+</span><span class="s2">&quot;的网页，请确认!&quot;</span><span class="p">)</span></div>
+    
+    <span class="k">def</span> <span class="nf">_focus_elementobject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ElementObject</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">execute_script</span><span class="p">(</span><span class="s2">&quot;arguments[0].scrollIntoView();&quot;</span><span class="p">,</span> <span class="n">ElementObject</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="ClassSelenium.drop_up_scroll"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.drop_up_scroll">[文档]</a>    <span class="k">def</span> <span class="nf">drop_up_scroll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">X_position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">Y_position</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        drop_up_scroll:操作滚动条函数,默认恢复到最初始,目前是适用火狐和IE浏览器</span>
+<span class="sd">        X_position:相对左上角的横坐标偏离位置，操作横向滚动条的参数</span>
+<span class="sd">        Y_position:相对左上角的纵坐标偏离位置，操作纵向滚动条的参数</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">execute_script</span><span class="p">(</span><span class="s2">&quot;window.scrollTo(</span><span class="si">{0}</span><span class="s2">, </span><span class="si">{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X_position</span><span class="p">,</span><span class="n">Y_position</span><span class="p">))</span></div>
+    
+<div class="viewcode-block" id="ClassSelenium.doubleclick"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.doubleclick">[文档]</a>    <span class="k">def</span> <span class="nf">doubleclick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ElementObject</span><span class="p">):</span>
+        <span class="n">ActionChains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="p">)</span><span class="o">.</span><span class="n">double_click</span><span class="p">(</span><span class="n">ElementObject</span><span class="o">.</span><span class="n">changetoWebElement</span><span class="p">())</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="ClassSelenium.leftclick"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.leftclick">[文档]</a>    <span class="k">def</span> <span class="nf">leftclick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ElementObject</span><span class="p">):</span>
+        <span class="n">ActionChains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="n">ElementObject</span><span class="o">.</span><span class="n">changetoWebElement</span><span class="p">())</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="ClassSelenium.rigthclick"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.rigthclick">[文档]</a>    <span class="k">def</span> <span class="nf">rigthclick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ElementObject</span><span class="p">):</span>
+        <span class="n">ActionChains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="p">)</span><span class="o">.</span><span class="n">context_click</span><span class="p">(</span><span class="n">ElementObject</span><span class="o">.</span><span class="n">changetoWebElement</span><span class="p">())</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="ClassSelenium.movetoelement"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.movetoelement">[文档]</a>    <span class="k">def</span> <span class="nf">movetoelement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ElementObject</span><span class="p">):</span>
+        <span class="n">ActionChains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="p">)</span><span class="o">.</span><span class="n">move_to_element</span><span class="p">(</span><span class="n">ElementObject</span><span class="o">.</span><span class="n">changetoWebElement</span><span class="p">())</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="ClassSelenium.close"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.close">[文档]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                            关闭对象,固有函数，不可删除</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span></div>
+    
+        
+<div class="viewcode-block" id="ClassSelenium.getallframe"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.getallframe">[文档]</a>    <span class="k">def</span> <span class="nf">getallframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ele</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        alertoper：对当前文本框的操作，accept为确定，dismiss为取消</span>
+<span class="sd">                            获取弹出框的文本内容并返回</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">framelist</span><span class="o">=</span><span class="n">ele</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="s2">&quot;tag name&quot;</span><span class="p">,</span> <span class="s2">&quot;frame&quot;</span><span class="p">)</span>
+        <span class="n">iframelist</span><span class="o">=</span><span class="n">ele</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="s2">&quot;tag name&quot;</span><span class="p">,</span> <span class="s2">&quot;iframe&quot;</span><span class="p">)</span>
+        <span class="n">framelist</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">iframelist</span><span class="p">)</span>
+        <span class="n">templist</span><span class="o">=</span><span class="p">[</span><span class="n">ElementObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">framelist</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">templist</span></div>
+    
+<div class="viewcode-block" id="ClassSelenium.exist"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.exist">[文档]</a>    <span class="k">def</span> <span class="nf">exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attrdes</span><span class="p">,</span><span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        attrdes:为对象，其中主属性必须包含id,xpath,link text,partial link text,name,tag name,class name,css selector其中一个或多个</span>
+<span class="sd">                            其他辅助属性，为type,value，辅助属性支持正则</span>
+<span class="sd">        timeout:超时时间，默认为20秒</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="n">findresult</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="n">attrdes</span><span class="p">,</span><span class="n">TIMEOUT</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">findresult</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="n">attrdes</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">SeleniumError</span><span class="p">:</span>
+            <span class="n">findresult</span><span class="o">=</span><span class="kc">None</span>
+        <span class="k">return</span> <span class="n">findresult</span></div>
+    
+<div class="viewcode-block" id="ClassSelenium.isdisplayed"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.isdisplayed">[文档]</a>    <span class="k">def</span> <span class="nf">isdisplayed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attrdes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        attrdes:为对象，其中主属性必须包含id,xpath,link text,partial link text,name,tag name,class name,css selector其中一个或多个</span>
+<span class="sd">                            其他辅助属性，为type,value，辅助属性支持正则</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">findresult</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="n">attrdes</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">noisplayError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">findresult</span></div>
+    
+<div class="viewcode-block" id="ClassSelenium.getelementbyattribute"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ClassSelenium.getelementbyattribute">[文档]</a>    <span class="k">def</span> <span class="nf">getelementbyattribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrdes</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">getall</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">farther</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">TIMEOUT</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="n">timecount</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">elements</span><span class="o">=</span><span class="kc">None</span>
+        <span class="n">primary</span><span class="o">=</span><span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">farther</span><span class="p">:</span>
+            <span class="n">farther</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span>
+        <span class="c1">#检测当前字符串是否有主属性,由于是部分匹配，所以列表中顺序不可变</span>
+        <span class="n">attrlist</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tag name&#39;</span><span class="p">,</span><span class="s1">&#39;partial link text&#39;</span><span class="p">,</span><span class="s1">&#39;link text&#39;</span><span class="p">,</span><span class="s1">&#39;class name&#39;</span><span class="p">,</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;css selector&#39;</span><span class="p">,</span><span class="s1">&#39;xpath&#39;</span><span class="p">]</span>
+        <span class="c1">#从属性字符串中找出主属性，优先找出tag name</span>
+        <span class="k">for</span> <span class="n">attrstr</span> <span class="ow">in</span> <span class="n">attrlist</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">attrstr</span><span class="o">+</span><span class="s1">&#39;:[^,]*&#39;</span><span class="p">,</span><span class="n">attrdes</span><span class="p">):</span>
+                <span class="n">primary</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">attrstr</span><span class="o">+</span><span class="s1">&#39;:[^,]*&#39;</span><span class="p">,</span> <span class="n">attrdes</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+                <span class="n">assist</span><span class="o">=</span><span class="n">attrdes</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="c1">#assist=re.sub(primary+&#39;:[^,]*&#39;, &#39;&#39;, attrdes).strip(&#39;,&#39;)</span>
+                <span class="k">break</span>
+        <span class="c1">#分解主属性，获取主属性和值</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">primary</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">attrdes</span><span class="o">+</span><span class="s2">&quot;中没有找到主属性，请确认!&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="n">attrdes</span><span class="o">+</span><span class="s2">&quot;中没有找到主属性，请确认!&quot;</span><span class="p">)</span>
+        <span class="n">primaryindex</span><span class="o">=</span><span class="n">primary</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+        <span class="c1">#self.switchtoframe()</span>
+        <span class="k">while</span> <span class="n">timecount</span><span class="o">&lt;</span><span class="n">TIMEOUT</span><span class="p">:</span>
+            <span class="n">elements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_findelementbyattribute</span><span class="p">(</span><span class="n">primary</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">primaryindex</span><span class="p">],</span> <span class="n">primary</span><span class="p">[</span><span class="n">primaryindex</span><span class="o">+</span><span class="mi">1</span><span class="p">:],</span><span class="n">assist</span><span class="p">,</span><span class="n">farther</span><span class="p">)</span>
+            <span class="k">if</span>  <span class="ow">not</span> <span class="n">elements</span><span class="p">:</span>
+                <span class="n">timecount</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">elements</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">attrdes</span><span class="o">+</span><span class="s2">&quot;属性对象没有找到!&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="n">attrdes</span><span class="o">+</span><span class="s2">&quot;属性对象没有找到!&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">getall</span><span class="p">:</span>
+            <span class="n">templist</span><span class="o">=</span><span class="p">[</span><span class="n">ElementObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">templist</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lennumber</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">lennumber</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">timecount</span><span class="o">=</span><span class="mi">1</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_displayed</span><span class="p">():</span>
+                    <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">location_once_scrolled_into_view</span>
+                <span class="k">while</span> <span class="p">(</span><span class="ow">not</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_displayed</span><span class="p">())</span> <span class="ow">and</span> <span class="n">timecount</span><span class="o">&lt;</span><span class="n">TIMEOUT</span><span class="p">:</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">timecount</span><span class="o">+=</span><span class="mi">1</span>
+                <span class="k">if</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_displayed</span><span class="p">():</span>
+                    <span class="k">return</span> <span class="n">ElementObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">attrdes</span><span class="o">+</span><span class="s2">&quot;属性对象不可以操作，请确认!&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">noisplayError</span><span class="p">(</span><span class="n">attrdes</span><span class="o">+</span><span class="s2">&quot;属性对象不可以操作，请确认!&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">lennumber</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">attrdes</span><span class="o">+</span><span class="s2">&quot;属性对象找到多个，请确认!&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="n">attrdes</span><span class="o">+</span><span class="s2">&quot;属性对象找到多个，请确认!&quot;</span><span class="p">)</span></div>
+        
+    <span class="k">def</span> <span class="nf">_findelementbyattribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">,</span><span class="n">assist</span><span class="p">,</span><span class="n">farther</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        attrdes:为对象，其中主属性必须包含id,xpath,link text,partial link text,name,tag name,class name,css selector其中一个或多个</span>
+<span class="sd">                            其他辅助属性，为type,value，辅助属性支持正则</span>
+<span class="sd">        getall:返回对象集合，默认为返回单个元素</span>
+<span class="sd">        farther:父节点对象，默认为ClassSelenium中driver对象，即整个浏览器</span>
+<span class="sd">        TIMEOUT:设置超时时间</span>
+<span class="sd">                            所有对象属性书写方式为,&quot;attr:value&quot;，多个属性使用,分割，如果最后对象总数为1则返回对象，大于1则返回错误提示根据属性找到大于1的对象，提示增加辅助属性</span>
+<span class="sd">                            如果没有找到，则会再次查找，超过超时时间后，如果还是没有找到，则报无对象错误，默认超时时间为20秒</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">elements</span><span class="o">=</span><span class="kc">None</span>
+        <span class="n">findException</span><span class="o">=</span><span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">farther</span><span class="p">:</span>
+            <span class="n">farther</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">findException</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">elements</span><span class="o">=</span><span class="n">farther</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="c1">#增加异常StaleElementReferenceException抓捕，防止出现对象刷新导致的对象获取失效</span>
+            <span class="k">except</span> <span class="n">SeleniumExceptions</span><span class="o">.</span><span class="n">StaleElementReferenceException</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">elements</span> <span class="ow">and</span> <span class="n">assist</span><span class="p">:</span>
+            <span class="c1">#根据辅助属性，找出筛检对象</span>
+            <span class="n">assistlist</span><span class="o">=</span><span class="n">assist</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">assistlist</span><span class="p">:</span>
+                <span class="n">indexnumber</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                <span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+                <span class="c1">#从主属性对象集合中找出附属属性</span>
+                <span class="k">while</span> <span class="n">i</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">indexnumber</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;text&#39;</span><span class="p">:</span>
+                        <span class="n">re_str</span><span class="o">=</span><span class="s1">&#39;^&#39;</span><span class="o">+</span><span class="n">e</span><span class="p">[</span><span class="n">indexnumber</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="s1">&#39;$&#39;</span>
+                        <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="n">indexnumber</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+                            <span class="n">re_str</span><span class="o">=</span><span class="n">re_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="n">indexnumber</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.*&#39;</span><span class="p">):</span>
+                            <span class="n">re_str</span><span class="o">=</span><span class="n">re_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">re_str</span><span class="p">,</span><span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()):</span>
+                            <span class="n">elements</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1">#正则表达式中需要做设定，必须以给定的字符串打头和结尾</span>
+                        <span class="c1">#print(e[0:indexnumber],&#39;^&#39;+e[indexnumber+1:]+&#39;$&#39;,elements[i].get_attribute(e[0:indexnumber]))</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">indexnumber</span><span class="p">])</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="o">+</span><span class="n">e</span><span class="p">[</span><span class="n">indexnumber</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="s1">&#39;$&#39;</span><span class="p">,</span><span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">indexnumber</span><span class="p">]))):</span>
+                            <span class="n">elements</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">elements</span><span class="p">:</span>
+            <span class="n">framelist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getallframe</span><span class="p">(</span><span class="n">farther</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">eachframe</span> <span class="ow">in</span> <span class="n">framelist</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">switchtoframe</span><span class="p">(</span><span class="n">eachframe</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">SeleniumExceptions</span><span class="o">.</span><span class="n">WebDriverException</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">elements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_findelementbyattribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">,</span><span class="n">assist</span><span class="p">,</span><span class="n">farther</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">elements</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">switch_to</span><span class="o">.</span><span class="n">parent_frame</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">elements</span>            </div>
+        
+    
+<div class="viewcode-block" id="ElementObject"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject">[文档]</a><span class="k">class</span> <span class="nc">ElementObject</span><span class="p">(</span><span class="n">ClassSelenium</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">driver</span><span class="p">,</span><span class="n">EO</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">=</span><span class="n">EO</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="o">=</span><span class="n">EO</span><span class="o">.</span><span class="n">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">EO</span><span class="o">.</span><span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w3c</span> <span class="o">=</span> <span class="n">EO</span><span class="o">.</span><span class="n">_w3c</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">=</span><span class="n">driver</span>
+        
+<div class="viewcode-block" id="ElementObject.sendkeys"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.sendkeys">[文档]</a>    <span class="k">def</span> <span class="nf">sendkeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputstr</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">inputstr</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="ElementObject.keyboard"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.keyboard">[文档]</a>    <span class="k">def</span> <span class="nf">keyboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputstr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        keyboard:模拟键盘操作，只支持如下参数输入</span>
+<span class="sd">        keyboardNULL,CANCEL,HELP,BACKSPACE,BACK_SPACE,TAB,CLEAR,RETURN,ENTER,SHIFT,LEFT_SHIFT,CONTROL,LEFT_CONTROL,ALT,LEFT_ALT,PAUSE,ESCAPE,SPACE</span>
+<span class="sd">        PAGE_UP,PAGE_DOWN,END,HOME,LEFT,ARROW_LEFT,UP,ARROW_UP,RIGHT,ARROW_RIGHT,DOWN,ARROW_DOWN,INSERT,DELETE,SEMICOLON,EQUALS,NUMPAD0</span>
+<span class="sd">        NUMPAD1,NUMPAD2,NUMPAD3,NUMPAD4,NUMPAD5,NUMPAD6,NUMPAD7,NUMPAD8,NUMPAD9,MULTIPLY,ADD,SEPARATOR,SUBTRACT,DECIMAL,DIVIDE,</span>
+<span class="sd">        F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,META,COMMAND</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;Keys.&#39;</span><span class="o">+</span><span class="n">inputstr</span><span class="p">))</span></div>
+    
+<div class="viewcode-block" id="ElementObject.getattribute"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.getattribute">[文档]</a>    <span class="k">def</span> <span class="nf">getattribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputstr</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">inputstr</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="ElementObject.isreadonly"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.isreadonly">[文档]</a>    <span class="k">def</span> <span class="nf">isreadonly</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        attrdes:为对象，其中主属性必须包含id,xpath,link text,partial link text,name,tag name,class name,css selector其中一个或多个</span>
+<span class="sd">                            其他辅助属性，为type,value，辅助属性支持正则</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">findresult</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;readonly&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">findresult</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+    
+    <span class="k">def</span> <span class="nf">_focus_element</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">_focus_elementobject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="ElementObject.Click"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.Click">[文档]</a>    <span class="k">def</span> <span class="nf">Click</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">aa</span><span class="p">:</span>
+            <span class="c1">#处理可能出现的元素不在界面显示，无法点击的问题，将使用滚动条切换到可显示指定元素的位置，然后再做一次点击操作</span>
+            <span class="n">Exception_str</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aa</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;Element is not clickable at point&#39;</span> <span class="ow">in</span> <span class="n">Exception_str</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_focus_element</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">aa</span></div>
+    
+<div class="viewcode-block" id="ElementObject.gettabletitle"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.gettabletitle">[文档]</a>    <span class="k">def</span> <span class="nf">gettabletitle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        gettabletitle:获取table对象的title属性，以列表的形式返回</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;table&#39;</span><span class="p">:</span>
+            <span class="n">titlestr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:thead&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>
+            <span class="n">titlelist</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^\n]+&#39;</span><span class="p">,</span><span class="n">titlestr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">titlelist</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;元素对象不为table对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span>
+            <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;元素对象不为table对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span></div>
+        
+<div class="viewcode-block" id="ElementObject.gettabletext"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.gettabletext">[文档]</a>    <span class="k">def</span> <span class="nf">gettabletext</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        gettabletitle:获取table对象的title属性，以列表的形式返回</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;table&#39;</span><span class="p">:</span>
+            <span class="n">bodystr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:tbody&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>
+            <span class="n">bodylist</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^\n]+&#39;</span><span class="p">,</span><span class="n">bodystr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">bodylist</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;元素对象不为table对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span>
+            <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;元素对象不为table对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span></div>
+        
+<div class="viewcode-block" id="ElementObject.gettablecellbytitleandrow"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.gettablecellbytitleandrow">[文档]</a>    <span class="k">def</span> <span class="nf">gettablecellbytitleandrow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">titlename</span><span class="p">,</span><span class="n">rownumber</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        gettablecellbytitleandrow:根据列名和行数获取单元格元素对象</span>
+<span class="sd">        titlename:标题名字</span>
+<span class="sd">        rownumber:行数</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;table&#39;</span><span class="p">:</span>
+            <span class="n">titlenames</span><span class="o">=</span><span class="p">[]</span>
+            <span class="c1">#需要判断第一个是否为无标题全选框</span>
+            <span class="n">titleelements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:thead&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:tr&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:th&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">titleelements</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">each</span><span class="o">.</span><span class="n">gettext</span><span class="p">():</span>
+                    <span class="n">titlenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">gettext</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1">#如果不存在text属性，则以name属性代替</span>
+                    <span class="n">titlenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:input&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">))</span>
+            <span class="c1">#找出当前title在titles中的列数</span>
+            <span class="n">titleindex</span><span class="o">=</span><span class="n">titlenames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">titlename</span><span class="p">)</span>
+            <span class="n">tabletextelements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:tbody&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:tr&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">tablerowelement</span><span class="o">=</span><span class="n">tabletextelements</span><span class="p">[</span><span class="n">rownumber</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">tablecellelements</span><span class="o">=</span><span class="n">tablerowelement</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:td&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">tablecellelement</span><span class="o">=</span><span class="n">tablecellelements</span><span class="p">[</span><span class="n">titleindex</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">tablecellelement</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;元素对象不为table对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span>
+            <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;元素对象不为table对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span></div>
+<div class="viewcode-block" id="ElementObject.gettablecellbytitleandvalue"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.gettablecellbytitleandvalue">[文档]</a>    <span class="k">def</span> <span class="nf">gettablecellbytitleandvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">titlename</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        gettablecellbytitleandrow:根据列名和行数获取单元格元素对象</span>
+<span class="sd">        titlename:标题名字</span>
+<span class="sd">        rownumber:行数</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">()</span><span class="o">!=</span><span class="s1">&#39;table&#39;</span><span class="p">:</span>
+            <span class="bp">self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:table&#39;</span><span class="p">)</span>
+        
+        <span class="n">titlenames</span><span class="o">=</span><span class="p">[]</span>
+        <span class="c1">#需要判断第一个是否为无标题全选框</span>
+        <span class="n">titleelements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:thead&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:tr&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:td&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">titleelements</span><span class="p">:</span>
+<span class="c1">#             if each.gettext():</span>
+<span class="c1">#                 titlenames.append(each.gettext())</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 #如果不存在text属性，则以name属性代替</span>
+<span class="c1">#                 titlenames.append(each.getelementbyattribute(&#39;tag name:input&#39;).getattribute(&#39;name&#39;))</span>
+            <span class="n">titlenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">gettext</span><span class="p">())</span>
+        <span class="c1">#找出当前title在titles中的列数</span>
+        <span class="n">titleindex</span><span class="o">=</span><span class="n">titlenames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">titlename</span><span class="p">)</span>
+        <span class="n">tabletextelements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:tbody&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:tr&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tablerowelement</span> <span class="ow">in</span> <span class="n">tabletextelements</span><span class="p">:</span>
+            <span class="c1">#tablerowelement=tabletextelements[rownumber-1]</span>
+            <span class="n">tablecellelements</span><span class="o">=</span><span class="n">tablerowelement</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:td&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">tablecellelement</span><span class="o">=</span><span class="n">tablecellelements</span><span class="p">[</span><span class="n">titleindex</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">tablecellelement</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">tablecellelement</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">tablecellelement</span>
+        <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;未找到列:&#39;</span><span class="o">+</span><span class="n">titlename</span><span class="o">+</span><span class="s1">&#39;值&#39;</span><span class="o">+</span><span class="n">value</span><span class="p">)</span></div>
+            
+
+ 
+<div class="viewcode-block" id="ElementObject.getrowbytitleandtext"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.getrowbytitleandtext">[文档]</a>    <span class="k">def</span> <span class="nf">getrowbytitleandtext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">titlename</span><span class="p">,</span><span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        getrowbytitleandrow:获取指定文本在表格中第一次出现的行数</span>
+<span class="sd">        titlename:标题名字</span>
+<span class="sd">        text:需要查找的文本</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;table&#39;</span><span class="p">:</span>
+            <span class="n">titlenames</span><span class="o">=</span><span class="p">[]</span>
+            <span class="n">row</span><span class="o">=</span><span class="mi">1</span>
+            <span class="c1">#需要判断第一个是否为无标题全选框</span>
+            <span class="n">titleelements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:thead&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:tr&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:th&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">titleelements</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">each</span><span class="o">.</span><span class="n">gettext</span><span class="p">():</span>
+                    <span class="n">titlenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">gettext</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1">#如果不存在text属性，则以name属性代替</span>
+                    <span class="n">titlenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:input&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">))</span>
+            <span class="c1">#找出当前title在titles中的列数</span>
+            <span class="n">titleindex</span><span class="o">=</span><span class="n">titlenames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">titlename</span><span class="p">)</span>
+            <span class="n">tabletextelements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:tbody&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:tr&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="c1">#逐条寻找指定文本</span>
+            <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">tabletextelements</span><span class="p">:</span>
+                <span class="n">tablecellelements</span><span class="o">=</span><span class="n">each</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:td&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="n">tablecellelement</span><span class="o">=</span><span class="n">tablecellelements</span><span class="p">[</span><span class="n">titleindex</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">tablecellelement</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span><span class="o">==</span><span class="n">text</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">row</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">row</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;在table中的&#39;</span><span class="o">+</span><span class="n">titlename</span><span class="o">+</span><span class="s1">&#39;列下没有找到&#39;</span><span class="o">+</span><span class="n">text</span><span class="o">+</span><span class="s1">&#39;内容单元格&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;在table中的&#39;</span><span class="o">+</span><span class="n">titlename</span><span class="o">+</span><span class="s1">&#39;列下没有找到&#39;</span><span class="o">+</span><span class="n">text</span><span class="o">+</span><span class="s1">&#39;内容单元格&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;元素对象不为table对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span>
+            <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;元素对象不为table对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span></div>
+    
+<div class="viewcode-block" id="ElementObject.getelementbyattribute"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.getelementbyattribute">[文档]</a>    <span class="k">def</span> <span class="nf">getelementbyattribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attrdes</span><span class="p">,</span> <span class="n">getall</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrdes</span><span class="p">,</span> <span class="n">getall</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="ElementObject.gettext"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.gettext">[文档]</a>    <span class="k">def</span> <span class="nf">gettext</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">text</span></div>
+    
+<div class="viewcode-block" id="ElementObject.isenabled"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.isenabled">[文档]</a>    <span class="k">def</span> <span class="nf">isenabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="ElementObject.gettagname"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.gettagname">[文档]</a>    <span class="k">def</span> <span class="nf">gettagname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">tag_name</span></div>
+    
+<div class="viewcode-block" id="ElementObject.changetoWebElement"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.changetoWebElement">[文档]</a>    <span class="k">def</span> <span class="nf">changetoWebElement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">WebElement</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">w3c</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="ElementObject.clear"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.clear">[文档]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="ElementObject.select"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.select">[文档]</a>    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        select:对下拉框对象进行选取操作</span>
+<span class="sd">        value:下拉框的值</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;select&#39;</span><span class="p">:</span>
+            <span class="c1">#需要判断第一个是否为无标题全选框</span>
+            <span class="n">titleelements</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;tag name:option&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">titleelements</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">each</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span><span class="o">==</span><span class="n">value</span><span class="p">:</span>
+                    <span class="n">each</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="s1">&#39;pass&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;在下拉框中下没有找到&#39;</span><span class="o">+</span><span class="n">value</span><span class="o">+</span><span class="s1">&#39;选项&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;在下拉框中下没有找到&#39;</span><span class="o">+</span><span class="n">value</span><span class="o">+</span><span class="s1">&#39;选项&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;元素对象不为下拉框对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span>
+            <span class="k">raise</span> <span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;元素对象不为下拉框对象，对象类型为：&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">gettagname</span><span class="p">())</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        from selenium.webdriver.support.select import Select</span>
+<span class="sd">        Select(self.eleobject).select_by_value(value)</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="ElementObject.is_displayed"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.ElementObject.is_displayed">[文档]</a>    <span class="k">def</span> <span class="nf">is_displayed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eleobject</span><span class="o">.</span><span class="n">is_displayed</span><span class="p">()</span></div></div>
+<div class="viewcode-block" id="SeleniumError"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.SeleniumError">[文档]</a><span class="k">class</span> <span class="nc">SeleniumError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="noisplayError"><a class="viewcode-back" href="../../Lib.html#Lib.ClassSelenium.noisplayError">[文档]</a><span class="k">class</span> <span class="nc">noisplayError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">abc</span><span class="o">=</span><span class="n">ClassSelenium</span><span class="p">(</span><span class="s2">&quot;http://www.baidu.com/,ie&quot;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1">#abc.getelementbyattribute(&#39;id:username_id&#39;).changetoWebElement().send_keys(r&#39;hundsun&#39;)</span>
+    <span class="c1">#abc.getelementbyattribute(&#39;id:password_id&#39;).sendkeys(r&#39;hundsun&#39;)</span>
+    
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">bladedoc</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Niucx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

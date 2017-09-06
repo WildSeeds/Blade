@@ -1,0 +1,134 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Lib.Operation &#8212; bladedoc 1.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Lib.Operation 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding=utf-8</span>
+<span class="kn">import</span> <span class="nn">Lib.ClassSelenium</span> <span class="k">as</span> <span class="nn">ClassSelenium</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="k">global</span> <span class="n">driver</span>
+<span class="k">global</span> <span class="n">InputData</span>
+<span class="k">global</span> <span class="n">UIExcept</span>
+
+<div class="viewcode-block" id="init"><a class="viewcode-back" href="../../Lib.html#Lib.Operation.init">[文档]</a><span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">driver</span>
+    <span class="n">driver</span><span class="o">=</span><span class="n">ClassSelenium</span><span class="o">.</span><span class="n">ClassSelenium</span><span class="p">(</span><span class="s2">&quot;http://10.20.27.63:8080/am/login.htm,chrome&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../Lib.html#Lib.Operation.login">[文档]</a><span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+    <span class="n">init</span><span class="p">()</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:#vc_op_code&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="n">InputData</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;商户名称&#39;</span><span class="p">))</span> <span class="c1">#获取案例值</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:#vc_op_password&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s2">&quot;123456&quot;</span><span class="p">)</span>   <span class="c1">#��</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:#login&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:投资管理&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:债权投资&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;class name:g-unit-wrap,text:投资明细代码&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;name:vc_stock_code,type:text&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s2">&quot;ZQD10061700W&quot;</span><span class="p">)</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:查询&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">movetoelement</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;xpath:.//*[@id=&#39;tr_dataTable_1&#39;]/td[3]/div/div&quot;</span><span class="p">))</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;xpath:.//*[@id=&#39;body_dataTable&#39;]/ul/li[1]/a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:#vc_product_id_zqtz&gt;.u-select.m-verify-success&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s2">&quot;500028-基金恒业&quot;</span><span class="p">)</span>
+    <span class="c1">#driver.getelementbyattribute(&#39;css selector:#combi_id_zqtz&gt;.u-select.m-verify-success&#39;).Select(&quot;2:缺省组合&quot;)</span>
+    <span class="c1">#driver.getelementbyattribute(&#39;css selector:#combi_id_zqtz&gt;.u-select.m-verify-success&#39;).Select(&quot;2:缺省组合&quot;)</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;xpath:.//*[@id=&#39;tab1_zqtz&#39;]/form/div[2]/button[1]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="n">aaa</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;xpath:.//*[@id=&#39;h_msg_floatdiv&#39;]/div[2]/div&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;xpath:.//*[@id=&#39;buttonCancel&#39;]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">aaa</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">UIExcept</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;UICheckOne&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">aaa</span><span class="o">==</span><span class="n">UIExcept</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;UICheckOne&#39;</span><span class="p">):</span><span class="c1">#UI检查</span>
+        <span class="k">return</span> <span class="s1">&#39;Pass&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;Fail&#39;</span><span class="p">,</span><span class="s1">&#39;is fail&#39;</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="c1">#return &#39;Pass&#39;,&#39;&#39;</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">bladedoc</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Niucx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

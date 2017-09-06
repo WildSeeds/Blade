@@ -1,0 +1,57 @@
+<TEST_PACK note="买方业务直接投资债权投资合同新增">
+  <Test>
+  	<sub id="1000187" pack_ver="32">
+      <inparams>
+        <in name="账号" value="8888"/>
+        <in name="密码" value="123456"/>
+        <in name="投资明细代码_s" value=""/>
+        <in name="投资明细状态_s" value=""/>
+        <in name="基金代码_s" value=""/>
+        <in name="基金名称_s" value=""/>
+        <in name="投资明细编号_s" value=""/>
+        <in name="对手方名称_s" value=""/>
+        <in name="投资明细名称_s" value=""/>
+        <in name="表格选择列名" value="投资明细代码"/>
+        <in name="表格选择列值" value="ZQD100017001"/>
+        <in name='项目代码' value=''/>
+        <in name='归属部门' value=''/>
+        <in name='项目类型' value=''/>
+        <in name='项目属性' value=''/>
+        <in name='项目总金额(元)' value=''/>
+        <in name='金额大写' value=''/>
+        <in name='项目经理' value=''/>
+        <in name='投资性质' value='1:普通投/融资'/>
+        <in name='投资明细代码' value=''/>
+        <in name='投资明细名称' value='webUI债权投资合同1'/>
+        <in name='投资明细编号' value='webUI债权投资合同1'/>
+        <in name='fa编码' value=''/>
+        <in name='投资金额(元)' value='10000.00'/>
+        <in name='金额大写' value=''/>
+        <in name='债权分类' value='u:普通债权'/>
+        <in name='签约日期' value='20170905'/>
+        <in name='开始日期' value='20170905'/>
+        <in name='到期日期' value='20180417'/>
+        <in name='投资类型' value=''/>
+        <in name='退出方式' value='1:回购'/>
+        <in name='含浮动收益' value='2:否'/>
+        <in name='收益说明' value='1:允许'/>
+        <in name='提前终止' value=''/>
+        <in name='五级分类' value=''/>
+        <in name='债务人' value='136721'/>
+        <in name='代偿方' value='136721'/>
+        <in name='担保方' value='136721'/>
+        <in name='投向行业' value='1:基础产业'/>
+        <in name='行业明细' value='林业(大类)'/>
+        <in name='还款来源' value='1:经营性现金流'/>
+        <in name='资金用途' value=''/>
+        <in name='签约利率(%)' value='11'/>
+        <in name='备注信息' value=''/>
+
+      </inparams>
+      <UIexcept>
+        <in name='UIexceptinfo' value='test'/>
+      </UIexcept>
+    </sub>
+
+  </Test>
+</TEST_PACK>

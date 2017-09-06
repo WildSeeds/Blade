@@ -1,0 +1,217 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Lib.menu &#8212; bladedoc 1.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Lib.menu 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding=utf-8</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Created on 2017年7月21日</span>
+
+<span class="sd">@author: Administrator</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">Lib.ClassSelenium</span> <span class="k">as</span> <span class="nn">ClassSelenium</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">builtins</span>
+<span class="c1">#from lib2to3.tests.support import driver</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">catch_warnings</span>
+<span class="k">global</span> <span class="n">driver</span>
+<span class="k">global</span> <span class="n">InputData</span>
+<span class="k">global</span> <span class="n">UIExcept</span>
+
+<div class="viewcode-block" id="menu"><a class="viewcode-back" href="../../Lib.html#Lib.menu.menu">[文档]</a><span class="k">class</span> <span class="nc">menu</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">menuwindow</span><span class="p">,</span><span class="n">leaf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leaf</span> <span class="o">=</span><span class="n">leaf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menuself</span> <span class="o">=</span> <span class="n">menuwindow</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menulink</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getmenulink</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getname</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submenulist</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">submenu</span><span class="p">()</span>
+<div class="viewcode-block" id="menu.getmenulink"><a class="viewcode-back" href="../../Lib.html#Lib.menu.menu.getmenulink">[文档]</a>    <span class="k">def</span> <span class="nf">getmenulink</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">leaf</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">menuself</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:a&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="menu.getname"><a class="viewcode-back" href="../../Lib.html#Lib.menu.menu.getname">[文档]</a>    <span class="k">def</span> <span class="nf">getname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">leaf</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">menulink</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;主菜单&quot;</span></div>
+<div class="viewcode-block" id="menu.submenu"><a class="viewcode-back" href="../../Lib.html#Lib.menu.menu.submenu">[文档]</a>    <span class="k">def</span> <span class="nf">submenu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">leaf</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">menuelelist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menuself</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:ul/li&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">menuelelist</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">menuself</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:li&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">menuelelist</span></div>
+<div class="viewcode-block" id="menu.openallmenu"><a class="viewcode-back" href="../../Lib.html#Lib.menu.menu.openallmenu">[文档]</a>    <span class="k">def</span> <span class="nf">openallmenu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">submenulist</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">menu</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">j</span><span class="o">.</span><span class="n">getmenulink</span><span class="p">()</span><span class="o">.</span><span class="n">Click</span><span class="p">();</span>
+            <span class="c1">#time.sleep(1)</span>
+            <span class="k">if</span> <span class="n">j</span><span class="o">.</span><span class="n">submenulist</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">j</span><span class="o">.</span><span class="n">submenulist</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">menu</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="n">m</span><span class="o">.</span><span class="n">getmenulink</span><span class="p">()</span><span class="o">.</span><span class="n">Click</span><span class="p">();</span>
+                    <span class="c1">#time.sleep(1)</span>
+                    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">submenulist</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">submenulist</span> <span class="p">:</span>
+                            <span class="n">p</span> <span class="o">=</span> <span class="n">menu</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+                            <span class="n">p</span><span class="o">.</span><span class="n">getmenulink</span><span class="p">()</span><span class="o">.</span><span class="n">Click</span><span class="p">();</span></div></div>
+                            <span class="c1">#time.sleep(1)</span>
+
+            
+            
+            
+<div class="viewcode-block" id="menunavigation"><a class="viewcode-back" href="../../Lib.html#Lib.menu.menunavigation">[文档]</a><span class="k">class</span> <span class="nc">menunavigation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">driver</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">driver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menunavigationself</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;css selector:.h-screen-tab&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward</span> <span class="o">=</span> <span class="n">menunavigation</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:div[1]&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">=</span><span class="n">menunavigation</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:div[2]&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backward</span> <span class="o">=</span> <span class="n">menunavigation</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:div[3]&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="n">menunavigation</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:div[4]&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">View_toolbar</span> <span class="o">=</span> <span class="n">menunavigation</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:div[5]&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="menunavigation.getmenutable"><a class="viewcode-back" href="../../Lib.html#Lib.menu.menunavigation.getmenutable">[文档]</a>    <span class="k">def</span> <span class="nf">getmenutable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span> 
+        <span class="n">tabellist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:li&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="c1">#获取标签页按钮</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tabellist</span><span class="p">:</span>
+            <span class="n">tabelspan</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:span&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tabelspan</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tabelspan</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="n">tabelspan</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tabelspan</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="n">tabelspan</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+            
+<div class="viewcode-block" id="menunavigation.getcloseTab"><a class="viewcode-back" href="../../Lib.html#Lib.menu.menunavigation.getcloseTab">[文档]</a>    <span class="k">def</span> <span class="nf">getcloseTab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">View_toolbar</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">View_toolbar</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:a&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+        
+        
+
+<div class="viewcode-block" id="init"><a class="viewcode-back" href="../../Lib.html#Lib.menu.init">[文档]</a><span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">driver</span>
+    <span class="n">driver</span><span class="o">=</span><span class="n">ClassSelenium</span><span class="o">.</span><span class="n">ClassSelenium</span><span class="p">(</span><span class="s2">&quot;http://10.20.25.124:8080/am/login.htm,chrome&quot;</span><span class="p">)</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;id:vc_op_code&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s1">&#39;yq124&#39;</span><span class="p">)</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:vc_op_password&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s2">&quot;123456&quot;</span><span class="p">)</span>   <span class="c1">#��</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:login&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="n">menubody</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;css selector:.h-menu-body&gt;ul&#39;</span><span class="p">)</span>
+    <span class="n">navigation</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;css selector:.h-screen-tab&#39;</span><span class="p">)</span>
+    <span class="n">temtable</span> <span class="o">=</span> <span class="n">menunavigation</span><span class="p">(</span><span class="n">navigation</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">temtable</span><span class="o">.</span><span class="n">getmenutable</span><span class="p">(</span><span class="s1">&#39;主页&#39;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gettext</span><span class="p">())</span>
+    <span class="c1">#fbmenu = menu(menubody,0)</span>
+    <span class="c1">#fbmenu.openallmenu()</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:系统管理&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:系统配置管理&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:用户管理&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">temtable</span><span class="o">.</span><span class="n">getcloseTab</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="n">i</span> <span class="o">=</span><span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">:</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="n">temtable</span><span class="o">.</span><span class="n">zoom</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">temtable</span><span class="o">.</span><span class="n">zoom</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span></div>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">init</span><span class="p">()</span>
+    
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">bladedoc</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Niucx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

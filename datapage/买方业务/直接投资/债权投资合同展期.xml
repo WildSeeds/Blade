@@ -1,0 +1,32 @@
+<TEST_PACK note="债券投资业务展期">
+  <Test>
+  	<sub id="1000187" pack_ver="32">
+      <inparams>
+        <in name="账号" value="8888"/>
+        <in name="密码" value="123456"/>
+        <in name="投资明细代码_s" value=""/>
+        <in name="投资明细状态_s" value=""/>
+        <in name="基金代码_s" value=""/>
+        <in name="基金名称_s" value=""/>
+        <in name="投资明细编号_s" value=""/>
+        <in name="对手方名称_s" value=""/>
+        <in name="投资明细名称_s" value=""/>
+        <in name="表格选择列名" value="投资明细代码"/>
+        <in name="表格选择列值" value="ZQD100017004"/>
+        <in name='项目代码#RD' value='webUI'/>
+        <in name='投资明细代码#RD' value='ZQD100017004'/>
+        <in name='投资对象#RD' value='136721:webUI1'/>
+        <in name='展期开始日#RD' value='20180418'/>
+        <in name='展期结束日' value='20180519'/>
+        <in name='变更日期#D' value='20170906'/>
+        <in name='展期原因' value=''/>
+
+
+      </inparams>
+      <UIexcept>
+        <in name='UIexceptinfo' value='test'/>
+      </UIexcept>
+    </sub>
+
+  </Test>
+</TEST_PACK>

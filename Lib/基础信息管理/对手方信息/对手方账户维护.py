@@ -49,8 +49,11 @@ class loanrivalaccount(object):
         driver.getelementbyattribute('tag name:button,text:取消').Click()
         self.downwindow.getelementbyattribute('link text:新增').Click()
         addwin = driver.getelementbyattribute(r'xpath://body/div[@style="display: block;"]/div[2]')
-
+        
+        
+        
         loanform = form(driver,addwin)
+        loanform['对手序号']
         setvalue(loanform,InputData,'对手名称','是否内部账户')
         #loanform.setvalue('省份','32:江苏省')
         #loanform.setvalue('城市','3201:南京市')
@@ -73,7 +76,9 @@ class loanrivalaccount(object):
         v3 = loanform['银行账户']
         if not readonly(v1,v2,v3):
             raise ClassSelenium.SeleniumExceptions('对手方账号修改字段非只读')
+        
         setvalue(loanform,InputData,'银行名称','是否内部账户')
+        
         loanform.button('确定')
         msgfloat(self.driver,'提示','操作成功','确定','对手方账号修改')
         return

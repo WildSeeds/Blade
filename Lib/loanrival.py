@@ -65,8 +65,7 @@ class loanrival(object):
         #loanform.setvalue['对手简称']
 
         driver.switchtoframe(framelist[-1])
-        addwindow = driver.getelementbyattribute('tag name:form,name:addForm')
-        driver.getelementbyattribute('tag name:button,text:重置').Click()
+        addwindow = driver.getelementbyattribute('xpath://div[@class="g-screen"]/div/form')
         loanform = form(driver,addwindow)
         # loanform.printlabel()
 

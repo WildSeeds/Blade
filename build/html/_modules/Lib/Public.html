@@ -1,0 +1,583 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Lib.Public &#8212; bladedoc 1.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Lib.Public 源代码</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Created on 2017楠烇拷8閺堬拷1閺冿拷</span>
+
+<span class="sd">@author: niucx14840</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+
+<span class="kn">import</span> <span class="nn">Lib.ClassSelenium</span> <span class="k">as</span> <span class="nn">ClassSelenium</span>
+<span class="kn">from</span> <span class="nn">Lib.ClassSelenium</span> <span class="k">import</span> <span class="n">ElementObject</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">catch_warnings</span>
+<span class="kn">from</span> <span class="nn">_ast</span> <span class="k">import</span> <span class="n">Num</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<span class="c1"># addwin=driver.getelementbyattribute(r&#39;xpath://child::div[@style=&quot;display: block;&quot;]/div[2]&#39;)</span>
+<span class="c1">#  b = driver.getelementbyattribute(&#39;css selector:.hc_selectbox-tree-div,display:block&#39;)</span>
+<span class="c1">#  css selector:.hc_selectbox-tree-div,style:[\s\S]*display: block;</span>
+<span class="c1"># xpath:descendant::label[@title=&quot;{0}&quot;]/following-sibling::*/descendant::*/input[@title]&#39;.format(value)</span>
+
+<div class="viewcode-block" id="switchlabeldriver"><a class="viewcode-back" href="../../Lib.html#Lib.Public.switchlabeldriver">[文档]</a><span class="k">def</span> <span class="nf">switchlabeldriver</span><span class="p">(</span><span class="n">driver</span><span class="p">:</span><span class="n">ClassSelenium</span><span class="p">,</span><span class="n">label</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">switch_to_default_content</span><span class="p">()</span>
+
+    <span class="n">driver</span><span class="o">.</span><span class="n">switchtoframe</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="exceptioncheck"><a class="viewcode-back" href="../../Lib.html#Lib.Public.exceptioncheck">[文档]</a><span class="k">def</span> <span class="nf">exceptioncheck</span><span class="p">(</span><span class="n">windriver</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    检查表单有没有报错提示信息，如果有抛出异常</span>
+<span class="sd">    :param windriver:  需要检查的表单元素</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">windriver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;css selector:.verify-tip-inner&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s2">&quot;css.verify-tip-inner:&quot;</span><span class="o">+</span><span class="s2">&quot;输入值有误&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="getheaderlist"><a class="viewcode-back" href="../../Lib.html#Lib.Public.getheaderlist">[文档]</a><span class="k">def</span> <span class="nf">getheaderlist</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    自动获取当前窗体下表格，解析表格信息，通过原值返回出来。（表头，值）</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1">#tableheader = driver._findelementbyattribute(r&#39;css selector&#39;, &#39;.hc-datagrid-header&#39;,&#39;&#39;,None) #瀹氫箟琛ㄦ牸鎶�</span>
+    <span class="n">tableheader</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.hc-datagrid-header&#39;</span><span class="p">)</span> 
+    <span class="n">tablebody</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.hc-datagrid-body&#39;</span><span class="p">)</span> <span class="c1">#鑾峰彇琛ㄦ牸浣�</span>
+    <span class="n">headerlist</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">templist</span> <span class="o">=</span> <span class="n">tableheader</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:table&gt;tbody&gt;tr&gt;td&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">templist</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">headerlist</span><span class="p">[</span><span class="s1">&#39;序号&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">num</span> <span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">headerlist</span><span class="p">[</span><span class="s1">&#39;选框&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;tag name:div&quot;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>
+            <span class="n">headerlist</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
+            
+        <span class="n">num</span> <span class="o">+=</span><span class="mi">1</span>
+    
+    
+    <span class="n">temptrbody</span> <span class="o">=</span> <span class="n">tablebody</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:table&gt;tbody&gt;tr&#39;</span><span class="p">,</span> <span class="n">getall</span> <span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">bodylist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">rowbody</span> <span class="ow">in</span>  <span class="n">temptrbody</span><span class="p">:</span>
+        <span class="n">temptdbodys</span> <span class="o">=</span> <span class="n">rowbody</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:td&gt;div&#39;</span><span class="p">,</span><span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">thtextlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">temptdbodys</span> <span class="p">]</span>
+        <span class="n">bodylist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thtextlist</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">headerlist</span><span class="p">,</span><span class="n">bodylist</span></div>
+        <span class="c1">#for temptdbody in temptdbody:</span>
+         <span class="c1">#   thtextlist = []</span>
+         <span class="c1">#   thtextlist.append(temp)</span>
+        
+<div class="viewcode-block" id="SelectListData"><a class="viewcode-back" href="../../Lib.html#Lib.Public.SelectListData">[文档]</a><span class="k">def</span> <span class="nf">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    通过传入的driver自动获取当前表格，通过k：列名 v：列中字段值，锁定所需的行，然后勾选</span>
+<span class="sd">    :param driver:</span>
+<span class="sd">    :param k:</span>
+<span class="sd">    :param v:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">i</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">j</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">elements</span><span class="o">=</span><span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">elements</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.hc-datagrid-header&gt;table&gt;tbody&gt;tr&gt;td&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.hc-datagrid-body&gt;table&gt;thead&gt;tr&gt;td&#39;</span><span class="p">,</span> <span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+        <span class="n">xt</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>  <span class="c1"># 获取表头值�</span>
+        <span class="k">if</span> <span class="n">xt</span> <span class="o">==</span> <span class="n">k</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    
+    <span class="n">element1s</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.hc-datagrid-body&gt;table&gt;tbody&gt;tr&#39;</span><span class="p">,</span><span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span>  <span class="n">element1s</span><span class="p">:</span>
+        <span class="n">ts</span><span class="o">=</span><span class="n">n</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:td:nth-child(&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">xs</span><span class="o">=</span><span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>   <span class="c1"># 获取cell值�</span>
+        
+        <span class="k">if</span> <span class="n">xs</span><span class="o">==</span><span class="n">v</span><span class="p">:</span>
+            <span class="n">ts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+            <span class="k">break</span>
+        <span class="n">j</span><span class="o">=</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="readonly"><a class="viewcode-back" href="../../Lib.html#Lib.Public.readonly">[文档]</a><span class="k">def</span> <span class="nf">readonly</span><span class="p">(</span><span class="o">*</span><span class="n">kw</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    传入表格中多组输入框元素，判断元素属性是否为只读，如果是返回true，如果不为只读，返回false</span>
+<span class="sd">    :param kw:表格中输入框元素</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;readonly&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="notemptycheck"><a class="viewcode-back" href="../../Lib.html#Lib.Public.notemptycheck">[文档]</a><span class="k">def</span> <span class="nf">notemptycheck</span><span class="p">(</span><span class="o">*</span><span class="n">kw</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    非空检查，传入表格中多组输入框元素，判断元素属性是否非空，如果是返回true，如果不为非空，返回false</span>
+<span class="sd">    :param kw:表格中输入框元素</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="ow">or</span> <span class="n">i</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span><span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">i</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+     
+<div class="viewcode-block" id="htips"><a class="viewcode-back" href="../../Lib.html#Lib.Public.htips">[文档]</a><span class="k">def</span> <span class="nf">htips</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    封装非标操作后再界面上方显示的提示框</span>
+<span class="sd">    driver传入driver</span>
+<span class="sd">    value传tips提示值，如果一直返回true，不一致返回false</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">htip</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;xpath://div[@class=&#39;h_tips&#39;]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gettext</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">value</span> <span class="ow">in</span> <span class="n">htip</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="msgfloat"><a class="viewcode-back" href="../../Lib.html#Lib.Public.msgfloat">[文档]</a><span class="k">def</span> <span class="nf">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">vtile</span><span class="p">,</span><span class="n">vbody</span><span class="p">,</span><span class="n">action</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="s1">&#39;操作失败&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    封装非标在做相关操作的时候弹出提示框</span>
+<span class="sd">    vtite:弹出标题</span>
+<span class="sd">    vbody:弹出窗提示文本</span>
+<span class="sd">    action：传入按钮文本 </span>
+<span class="sd">    error：抛异常文本信息</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">h_msg_floatdiv</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:h_msg_floatdiv&#39;</span><span class="p">,</span><span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">h_msg_floatdiv</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.m-message-header&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">h_msg_floatdiv</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.m-body-words&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>
+    <span class="n">footer</span> <span class="o">=</span> <span class="n">h_msg_floatdiv</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.h_btndiv.m-message-footer&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gettext</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="o">!=</span><span class="n">vtile</span> <span class="ow">or</span> <span class="p">(</span><span class="n">vbody</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">body</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="n">error</span><span class="o">+</span><span class="s2">&quot;失败，原因:&quot;</span><span class="o">+</span><span class="n">body</span><span class="p">)</span>
+    <span class="n">h_msg_floatdiv</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:&#39;</span><span class="o">+</span><span class="n">action</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="form"><a class="viewcode-back" href="../../Lib.html#Lib.Public.form">[文档]</a><span class="k">class</span> <span class="nc">form</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    封装非标表单，支持输入框，单选框，多选框，树形单选框，小手的赋值操作</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">driver</span><span class="p">,</span><span class="n">window</span><span class="p">:</span><span class="n">ElementObject</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">driver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">window</span><span class="p">,</span><span class="n">ElementObject</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loanform</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:form&#39;</span><span class="p">,</span><span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">window</span><span class="o">.</span><span class="n">gettagname</span><span class="p">()</span> <span class="o">==</span><span class="s1">&#39;form&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loanform</span><span class="o">=</span><span class="n">window</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loanform</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:form&#39;</span><span class="p">,</span><span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidediv</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:hc_hide_div&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_getinput</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span>
+    <span class="k">def</span> <span class="nf">_getinput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+<span class="c1">#         tempstr = &#39;xpath:descendant::label[@title=&quot;{0}&quot;]/following-sibling::*/descendant::*/input[@title]&#39;.format(value)</span>
+        <span class="n">tempstr</span> <span class="o">=</span> <span class="s1">&#39;xpath:descendant::label[@title=&quot;</span><span class="si">{0}</span><span class="s1">&quot;]/following-sibling::*/descendant::*/input&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">inputlist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loanform</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="n">tempstr</span><span class="p">,</span><span class="n">getall</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputlist</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span> <span class="o">=</span> <span class="n">inputlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputlist</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span> <span class="o">=</span> <span class="n">inputlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputlist</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span> <span class="o">=</span> <span class="n">inputlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s2">&quot;Form有新的输入框类型出现，需要添加功能&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span>
+    <span class="k">def</span> <span class="nf">_geteletype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># 获取输入框的class属性，根据css属性不同判断输入框的类型</span>
+        <span class="n">tempcss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;u-textfield&#39;</span> <span class="ow">in</span> <span class="n">tempcss</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;str&#39;</span>
+        <span class="k">elif</span>  <span class="s1">&#39;u-select&#39;</span> <span class="ow">in</span> <span class="n">tempcss</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;hc_select-tree&#39;</span> <span class="ow">in</span> <span class="n">tempcss</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;singtree&#39;</span>
+            <span class="k">elif</span>  <span class="s1">&#39;combox_disabled&#39;</span> <span class="ow">in</span> <span class="n">tempcss</span><span class="p">:</span>
+                <span class="k">return</span>  <span class="s1">&#39;combox&#39;</span>
+<span class="c1">#             elif self.curinputele.getattribute(&#39;multiple&#39;) == &#39;true&#39;:</span>
+<span class="c1">#                 return &#39;mulselect&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;select&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;u-calendar&#39;</span> <span class="ow">in</span> <span class="n">tempcss</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;calendar&#39;</span>
+    <span class="k">def</span> <span class="nf">_settextvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="c1">#title = self.curinputele.getattribute(&#39;value title&#39;)</span>
+        <span class="c1"># if title != value:</span>
+        <span class="c1">#     raise ClassSelenium.SeleniumExceptions(&#39;文本控件输入值:{0} 不成功&#39;.format(value))</span>
+    <span class="k">def</span> <span class="nf">_setselevalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="c1">#temp = self.hidediv.getelementbyattribute(&#39;tag name:div,style:[\s\S]*display: block;[\s\S]*&#39;)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:.//div[@id=&quot;hc_hide_div&quot;]/div,style:[\s\S]*display: block;[\s\S]*&#39;</span><span class="p">)</span>
+        <span class="k">if</span>  <span class="n">temp</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;multiple_line&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span><span class="p">:</span>   <span class="c1"># 如果是多选框执行多选框赋值函数</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setmulselevalue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#tempstr = &#39;xpath:ul/li[@title =&quot;{0}&quot;]&#39;.format(value)</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">tempstr</span> <span class="o">=</span> <span class="s1">&#39;xpath:ul/li/label,text:\s*</span><span class="si">{0}</span><span class="s1">\s*&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">listele</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="n">tempstr</span><span class="p">)</span>
+            <span class="n">listele</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">title</span><span class="o">!=</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s1">&#39;单选框值:</span><span class="si">{0}</span><span class="s1"> 选择不成功&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">_setmulselevalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            value:支持多个值传入，用&#39;,&#39;隔开</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1">#self.curinputele.Click()</span>
+        <span class="c1">#temp = self.hidediv.getelementbyattribute(&#39;tag name:div,style:[\s\S]*display: block;[\s\S]*&#39;)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:.//div[@id=&quot;hc_hide_div&quot;]/div,style:[\s\S]*display: block;[\s\S]*&#39;</span><span class="p">)</span>
+        <span class="c1"># 已经选择的全部清除</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">listeles</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:ul/li[@class=&quot;h_cur&quot;]&#39;</span><span class="p">,</span><span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">listeles</span><span class="p">:</span>
+                <span class="n">i</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;except&quot;</span><span class="p">,</span><span class="n">e</span><span class="p">)</span>
+        <span class="c1">#values = set(value.split(&#39;,&#39;))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+            <span class="c1">#tempsrt = &#39;xpath:ul/li,title:\s*{0}\s*&#39;.format(i)</span>
+            <span class="n">tempstr</span> <span class="o">=</span> <span class="s1">&#39;xpath:ul/li/label,text:\s*</span><span class="si">{0}</span><span class="s1">\s*&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">listele</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="n">tempsrt</span><span class="p">)</span>
+            <span class="n">listele</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s1">&#39;多选框值:</span><span class="si">{0}</span><span class="s1"> 选择不成功&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loanform</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_setcalendarvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">xpathstr</span> <span class="o">=</span> <span class="s1">&#39;xpath://div[@class=&quot;h_screen&quot;]/following-sibling::div,style:[\s\S]*display: block;[\s\S]*,class:[\s\S]*datetimepicker[\s\S]*&#39;</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="n">xpathstr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">temp</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.day.active&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">inputdate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:preceding-sibling::input&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">inputdate</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">title</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s1">&#39;文本控件输入值:</span><span class="si">{0}</span><span class="s1"> 不成功&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loanform</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_setsingtreevalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="n">value</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1">#temp = self.hidediv.getelementbyattribute(&#39;tag name:div,style:[\s\S]*display: block;[\s\S]*&#39;)</span>
+        <span class="n">temp</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath://div[@class=&quot;h_screen&quot;]/following-sibling::div/div[1],style:[\s\S]*display: block;&#39;</span><span class="p">)</span>
+        <span class="n">listele</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:.//span[text()=&quot;</span><span class="si">{0}</span><span class="s1">&quot;]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="n">listele</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curinputele</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">title</span><span class="o">!=</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s1">&#39;单选属性选择控件选择值:</span><span class="si">{0}</span><span class="s1"> 不成功&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+<div class="viewcode-block" id="form.setvalue"><a class="viewcode-back" href="../../Lib.html#Lib.Public.form.setvalue">[文档]</a>    <span class="k">def</span> <span class="nf">setvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        表单输入框的label值，输入到输入框的值</span>
+<span class="sd">        :param name:</span>
+<span class="sd">        :param value:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loanform</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:descendant::label[@title=&quot;</span><span class="si">{0}</span><span class="s1">&quot;]/following-sibling::div/div/i[@class=&quot;fa fa-hand-pointer-o u-autoitem-down&quot;]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hand</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+            <span class="n">tempaddwin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://body/div[@style=&quot;display: block;&quot;][last()]/div[2]&#39;</span><span class="p">)</span>
+            <span class="n">handobject</span> <span class="o">=</span> <span class="n">choosehand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="p">,</span><span class="n">tempaddwin</span><span class="p">)</span>
+            <span class="n">handobject</span><span class="o">.</span><span class="n">fastserach</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_getinput</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">cureletype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geteletype</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cureletype</span><span class="o">==</span><span class="s1">&#39;str&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_settextvalue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">cureletype</span><span class="o">==</span><span class="s1">&#39;calendar&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setcalendarvalue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">cureletype</span><span class="o">==</span><span class="s1">&#39;singtree&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setsingtreevalue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">cureletype</span><span class="o">==</span><span class="s1">&#39;select&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setselevalue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+<div class="viewcode-block" id="form.printlabel"><a class="viewcode-back" href="../../Lib.html#Lib.Public.form.printlabel">[文档]</a>    <span class="k">def</span> <span class="nf">printlabel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        该方法为了书写案例方便，对于一个表单有几十个输入框的情况，可以通过这个函数，在web界面给每个输入框付好值后通过，这个函数自动输入成我们需要的测试案例</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;请在Form输入值，按任意键继续&quot;</span><span class="p">)</span>
+
+        <span class="n">labellist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loanform</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:descendant::label[@title]&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">)</span> <span class="c1"># 获取表单的所有输入框</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labellist</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">is_displayed</span><span class="p">():</span>
+                    <span class="n">lable</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                    <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getinput</span><span class="p">(</span><span class="n">lable</span><span class="p">)</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span>
+
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;loanform.setvalue(&#39;</span><span class="si">{0}</span><span class="s2">&#39;, &#39;</span><span class="si">{1}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lable</span><span class="p">,</span><span class="n">title</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lable</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getinput</span><span class="p">(</span><span class="n">lable</span><span class="p">)</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#loanform.setvalue(&#39;</span><span class="si">{0}</span><span class="s2">&#39;, &#39;</span><span class="si">{1}</span><span class="s2">&#39;) # 属性隐藏&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lable</span><span class="p">,</span> <span class="n">title</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">lable</span><span class="p">,</span><span class="n">e</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#loanform.setvalue(&#39;</span><span class="si">{0}</span><span class="s2">&#39;) # </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lable</span><span class="p">,</span><span class="n">e</span><span class="p">))</span></div>
+<div class="viewcode-block" id="form.button"><a class="viewcode-back" href="../../Lib.html#Lib.Public.form.button">[文档]</a>    <span class="k">def</span> <span class="nf">button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="n">exceptioncheck</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">exceptioncheck</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="chooseloanrival"><a class="viewcode-back" href="../../Lib.html#Lib.Public.chooseloanrival">[文档]</a><span class="k">class</span> <span class="nc">chooseloanrival</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">driver</span><span class="p">,</span><span class="n">window</span><span class="p">:</span><span class="n">ElementObject</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">driver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sform</span> <span class="o">=</span> <span class="n">form</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">window</span><span class="p">)</span>
+
+<div class="viewcode-block" id="chooseloanrival.search"><a class="viewcode-back" href="../../Lib.html#Lib.Public.chooseloanrival.search">[文档]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">l_rival_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">vc_all_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">vc_rival_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        通过输入条件,查询对手方，如果不输入默认为None</span>
+<span class="sd">        :param l_rival_id: 对手方序号</span>
+<span class="sd">        :param vc_all_name: 对手方名称</span>
+<span class="sd">        :param vc_rival_type: 对手方类型</span>
+<span class="sd">        :return: 空</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">l_rival_id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手序号&#39;</span><span class="p">,</span><span class="n">l_rival_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vc_all_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手方名称 &#39;</span><span class="p">,</span><span class="n">vc_all_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vc_rival_type</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手类型&#39;</span><span class="p">,</span><span class="n">vc_rival_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sform</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s1">&#39;查询&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="chooseloanrival.fastserach"><a class="viewcode-back" href="../../Lib.html#Lib.Public.chooseloanrival.fastserach">[文档]</a>    <span class="k">def</span> <span class="nf">fastserach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">l_rival_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">vc_all_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">vc_rival_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        这个函数包括搜索选择点击查询一套流程，要求l_rival_id必须有效</span>
+<span class="sd">        :param l_rival_id:</span>
+<span class="sd">        :param vc_all_name:</span>
+<span class="sd">        :param vc_rival_type:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">l_rival_id</span><span class="p">,</span><span class="n">vc_all_name</span><span class="p">,</span><span class="n">vc_rival_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choosedata</span><span class="p">(</span><span class="s1">&#39;对手序号&#39;</span><span class="p">,</span><span class="n">l_rival_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s1">&#39;选择&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="chooseloanrival.choosedata"><a class="viewcode-back" href="../../Lib.html#Lib.Public.chooseloanrival.choosedata">[文档]</a>    <span class="k">def</span> <span class="nf">choosedata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">title</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        通过搜索表单对应列名以及那一列包含单的单元格值获取要选择的行，然后选定这一行</span>
+<span class="sd">        :param title: 表单列名</span>
+<span class="sd">        :param value: 表单列名那一列选择的值</span>
+<span class="sd">        :return: 空</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span><span class="n">title</span><span class="p">,</span><span class="n">value</span><span class="p">)</span></div>
+<div class="viewcode-block" id="chooseloanrival.button"><a class="viewcode-back" href="../../Lib.html#Lib.Public.chooseloanrival.button">[文档]</a>    <span class="k">def</span> <span class="nf">button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:选择&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">is_displayed</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s1">&#39;对手方选择框没有正常关闭&#39;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="choosehand"><a class="viewcode-back" href="../../Lib.html#Lib.Public.choosehand">[文档]</a><span class="k">class</span> <span class="nc">choosehand</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;封装了表单小手的弹出框&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">driver</span><span class="p">,</span><span class="n">window</span><span class="p">:</span><span class="n">ElementObject</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">driver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sform</span> <span class="o">=</span> <span class="n">form</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">window</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:descendant::label[@title]&#39;</span><span class="p">,</span> <span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+            <span class="k">if</span>  <span class="n">label</span><span class="o">.</span><span class="n">is_displayed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="o">.</span><span class="n">getattribute</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">))</span>
+<div class="viewcode-block" id="choosehand.search"><a class="viewcode-back" href="../../Lib.html#Lib.Public.choosehand.search">[文档]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">kw</span><span class="p">,</span><span class="o">**</span><span class="n">kkw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        通过输入条件,查询对手方，如果不输入默认为None</span>
+<span class="sd">        :param l_rival_id: 对手方序号</span>
+<span class="sd">        :param vc_all_name: 对手方名称</span>
+<span class="sd">        :param vc_rival_type: 对手方类型</span>
+<span class="sd">        :return: 空</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">)</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">kw</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s1">&#39;输入框和参数数值对应不正确&#39;</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">j</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">+=</span><span class="mi">1</span>
+
+        <span class="k">elif</span> <span class="n">kkw</span><span class="p">:</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">kkw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sform</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s1">&#39;查询&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="choosehand.fastserach"><a class="viewcode-back" href="../../Lib.html#Lib.Public.choosehand.fastserach">[文档]</a>    <span class="k">def</span> <span class="nf">fastserach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">kw</span><span class="p">,</span><span class="o">**</span><span class="n">kkw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        这个函数包括搜索选择点击查询一套流程，要求l_rival_id必须有效</span>
+<span class="sd">        :param l_rival_id:</span>
+<span class="sd">        :param vc_all_name:</span>
+<span class="sd">        :param vc_rival_type:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="o">*</span><span class="n">kw</span><span class="p">,</span><span class="o">**</span><span class="n">kkw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choosedata</span><span class="p">(</span><span class="o">*</span><span class="n">kw</span><span class="p">,</span><span class="o">**</span><span class="n">kkw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s1">&#39;选择&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="choosehand.choosedata"><a class="viewcode-back" href="../../Lib.html#Lib.Public.choosehand.choosedata">[文档]</a>    <span class="k">def</span> <span class="nf">choosedata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">kw</span><span class="p">,</span><span class="o">**</span><span class="n">kkw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        通过搜索表单对应列名以及那一列包含单的单元格值获取要选择的行，然后选定这一行</span>
+<span class="sd">        :param title: 表单列名</span>
+<span class="sd">        :param value: 表单列名那一列选择的值</span>
+<span class="sd">        :return: 空</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="n">SelectListData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">kkw</span><span class="p">:</span>
+            <span class="n">SelectListData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">kw</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span></div>
+<div class="viewcode-block" id="choosehand.button"><a class="viewcode-back" href="../../Lib.html#Lib.Public.choosehand.button">[文档]</a>    <span class="k">def</span> <span class="nf">button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:选择&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">is_displayed</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s1">&#39;对手方选择框没有正常关闭&#39;</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="setvalue"><a class="viewcode-back" href="../../Lib.html#Lib.Public.setvalue">[文档]</a><span class="k">def</span> <span class="nf">setvalue</span><span class="p">(</span><span class="n">inputform</span><span class="p">:</span><span class="n">form</span><span class="p">,</span><span class="n">dic</span><span class="p">:</span><span class="nb">dict</span><span class="p">,</span><span class="n">begin</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">end</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    通过输入数据XML自动生成表单的赋值语句</span>
+<span class="sd">    :param inputform: 脚本需要的输入值序列</span>
+<span class="sd">    :param dic: 脚本需要的字典</span>
+<span class="sd">    :param begin: 起点</span>
+<span class="sd">    :param end: 结束点</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1">#print(key, value)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">==</span><span class="n">begin</span> <span class="ow">or</span> <span class="n">flag</span> <span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span><span class="kc">True</span>
+            <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;=&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="n">tempdict</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">temps</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">spit</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temps</span><span class="p">:</span>
+                        <span class="n">tempdict</span><span class="p">[</span><span class="n">temp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span><span class="o">=</span><span class="n">temp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">inputform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">tempdict</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="n">inputform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+                <span class="c1">#print(&#39;inputform.setvalue({0},{1})&#39;.format(key,value))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">inputform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">return</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">global</span> <span class="n">driver</span>
+    <span class="n">driver</span><span class="o">=</span><span class="n">ClassSelenium</span><span class="o">.</span><span class="n">ClassSelenium</span><span class="p">(</span><span class="s2">&quot;http://10.20.25.124:8080/am/login.htm,chrome&quot;</span><span class="p">)</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;id:vc_op_code&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s1">&#39;8888&#39;</span><span class="p">)</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:vc_op_password&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s2">&quot;123456&quot;</span><span class="p">)</span>   <span class="c1">#��</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:login&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:系统管理&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:系统配置管理&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:ul[style=display: block;]/li[@title=</span><span class="si">{0}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;dbf上传配置管理&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="c1">#閼惧嘲褰囬悽銊﹀煕鐞涖劌宕�</span>
+    <span class="k">global</span> <span class="n">operatable</span>
+<span class="c1">#     operatable=driver.getelementbyattribute(&#39;tag name:table,id:data_table_dataTable&#39;)</span>
+    <span class="c1">#閼惧嘲褰囬悽銊﹀煕閸旂喕鍏橀懣婊冨礋</span>
+    <span class="k">global</span> <span class="n">buttonmenu</span>
+
+    <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="s1">&#39;用户名&#39;</span><span class="p">,</span><span class="s1">&#39;1212&#39;</span><span class="p">)</span>
+
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">bladedoc</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Niucx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

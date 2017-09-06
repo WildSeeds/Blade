@@ -1,0 +1,622 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Lib.loanrival &#8212; bladedoc 1.0 文档</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Lib.loanrival 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding=utf-8</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Created on 2017年7月21日</span>
+
+<span class="sd">@author: Administrator</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">Lib.ClassSelenium</span> <span class="k">as</span> <span class="nn">ClassSelenium</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">Lib.Public</span> <span class="k">import</span> <span class="o">*</span> 
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">catch_warnings</span>
+<span class="kn">from</span> <span class="nn">Lib.Common</span> <span class="k">import</span> <span class="n">TIMEOUT</span>
+<span class="kn">from</span> <span class="nn">array</span> <span class="k">import</span> <span class="n">array</span>
+<span class="kn">from</span> <span class="nn">msilib.schema</span> <span class="k">import</span> <span class="n">Class</span>
+<span class="kn">from</span> <span class="nn">lib2to3.fixer_util</span> <span class="k">import</span> <span class="n">String</span>
+<span class="k">global</span> <span class="n">driver</span>
+<span class="k">global</span> <span class="n">InputData</span>
+<span class="k">global</span> <span class="n">UIExcept</span>
+
+
+
+<div class="viewcode-block" id="init"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.init">[文档]</a><span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">driver</span>
+    <span class="n">driver</span><span class="o">=</span><span class="n">ClassSelenium</span><span class="o">.</span><span class="n">ClassSelenium</span><span class="p">(</span><span class="s2">&quot;http://192.168.70.237:8080/am/login.htm,chrome&quot;</span><span class="p">)</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;id:vc_op_code&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s1">&#39;8888&#39;</span><span class="p">)</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:vc_op_password&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s2">&quot;123456&quot;</span><span class="p">)</span>   <span class="c1">#��</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:login&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:基础信息管理&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:对手方信息&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:对手方维护&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span><span class="c1">#菜单</span></div>
+    <span class="c1">#获取左侧列表</span>
+<div class="viewcode-block" id="loanrival"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival">[文档]</a><span class="k">class</span> <span class="nc">loanrival</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">window</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upwindow</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:form,name:bankaccountForm&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:wrap_bankaccountTable&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dialog_message</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:dialog-message&#39;</span><span class="p">,</span><span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dialog_message_confirmnex</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;id:dialog_message_confirmnext&#39;</span><span class="p">,</span><span class="n">getall</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+         <span class="c1"># 点击展开按钮并做检查</span>
+
+<div class="viewcode-block" id="loanrival.search"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.search">[文档]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:清空&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">loanform</span> <span class="o">=</span> <span class="n">form</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">upwindow</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">notemptycheck</span><span class="p">(</span><span class="n">loanform</span><span class="p">[</span><span class="s1">&#39;对手序号&#39;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s2">&quot;角色搜索清空失败&quot;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手序号&#39;</span><span class="p">,</span> <span class="s1">&#39;1233&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;1233&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手方名称&#39;</span><span class="p">,</span> <span class="s1">&#39;1233&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;行业类别&#39;</span><span class="p">,</span> <span class="s1">&#39;1:基础产业&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;企业特征&#39;</span><span class="p">,</span><span class="s1">&#39;2:大型企业&#39;</span><span class="p">)</span>
+        <span class="c1">#loanform.setvalue(&#39;对手序号&#39;, &#39;1233&#39;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:查询&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span></div>
+    
+        
+<div class="viewcode-block" id="loanrival.end"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.end">[文档]</a>    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    
+      
+<div class="viewcode-block" id="loanrival.add"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.add">[文档]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:新增&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">switch_to_default_content</span><span class="p">()</span>
+        <span class="n">framelist</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getallframe</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">driver</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">framelist</span><span class="p">)</span>
+        <span class="c1">#loanform.setvalue[&#39;对手简称&#39;]</span>
+
+        <span class="n">driver</span><span class="o">.</span><span class="n">switchtoframe</span><span class="p">(</span><span class="n">framelist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">addwindow</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:form,name:addForm&#39;</span><span class="p">)</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:重置&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">loanform</span> <span class="o">=</span> <span class="n">form</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">addwindow</span><span class="p">)</span>
+        <span class="c1"># loanform.printlabel()</span>
+
+        <span class="c1">#外部评级机构 对手方选择</span>
+        <span class="n">loanform</span><span class="p">[</span><span class="s1">&#39;外部评级机构&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:following-sibling::i&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">loanformfloatwindow</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">loanwindow</span> <span class="o">=</span> <span class="n">chooseloanrival</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">loanformfloatwindow</span><span class="p">)</span>
+        <span class="n">loanwindow</span><span class="o">.</span><span class="n">fastserach</span><span class="p">(</span><span class="s1">&#39;136717&#39;</span><span class="p">,</span><span class="s1">&#39;菲克力12138&#39;</span><span class="p">,</span><span class="s1">&#39;非金融机构&#39;</span><span class="p">)</span>
+
+        <span class="c1"># #所属集团 对手方选择</span>
+        <span class="c1"># loanform[&#39;所属集团&#39;].getelementbyattribute(&#39;xpath:following-sibling::i&#39;).Click()</span>
+        <span class="c1"># chooseloanrival(driver,driver.getelementbyattribute(r&#39;xpath://child::div[@style=&quot;display: block;&quot;]/div[2]&#39;)).fastserach(&#39;136717&#39;, &#39;菲克力12138&#39;, &#39;非金融机构&#39;)</span>
+        <span class="c1"># #return</span>
+        <span class="c1">#driver.getelementbyattribute(&#39;tag name:button,text:确定&#39;).Click()</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手方名称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手类型&#39;</span><span class="p">,</span> <span class="s1">&#39;非金融机构&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;角色分类&#39;</span><span class="p">,</span> <span class="s1">&#39;抵、质押担保方&#39;</span><span class="p">)</span>
+        <span class="c1"># loanform.setvalue(&#39;对手性别&#39;, &#39;&#39;) # 属性隐藏</span>
+        <span class="c1"># loanform.setvalue(&#39;机构分类&#39;, &#39;产险公司&#39;) # 属性隐藏</span>
+        <span class="c1"># loanform.setvalue(&#39;出生日期&#39;, &#39;&#39;) # 属性隐藏</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;组织机构代码&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;社会信用代码&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;贷款卡号&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="c1"># loanform.setvalue(&#39;证件类型&#39;, &#39;&#39;) # 属性隐藏</span>
+        <span class="c1"># loanform.setvalue(&#39;证件号码&#39;, &#39;&#39;) # 属性隐藏</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;企业特征&#39;</span><span class="p">,</span> <span class="s1">&#39;大型企业&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;企业性质&#39;</span><span class="p">,</span> <span class="s1">&#39;企业法人(公司、非公司制企业法人)&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;行业分类&#39;</span><span class="p">,</span> <span class="s1">&#39;基础产业&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;明细分类&#39;</span><span class="p">,</span> <span class="s1">&#39;农业(大类)&#39;</span><span class="p">)</span>
+        <span class="c1"># loanform.setvalue(&#39;职业分类&#39;, &#39;政府部门&#39;) # 属性隐藏</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;归属国别&#39;</span><span class="p">,</span> <span class="s1">&#39;CHN:中华人民共和国&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手方子类&#39;</span><span class="p">,</span> <span class="s1">&#39;银行类&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;内部评级&#39;</span><span class="p">,</span> <span class="s1">&#39;AAA&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;外部评级&#39;</span><span class="p">,</span> <span class="s1">&#39;AAA&#39;</span><span class="p">)</span>
+        <span class="c1">#loanform.setvalue(&#39;外部评级机构&#39;, &#39;请选择&#39;)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;公司类型&#39;</span><span class="p">,</span> <span class="s1">&#39;内资企业&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;注册类型&#39;</span><span class="p">,</span> <span class="s1">&#39;工商注册号&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;登记注册号&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;注册资本&#39;</span><span class="p">,</span> <span class="s1">&#39;元&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;企业法人&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;法人证件类型&#39;</span><span class="p">,</span> <span class="s1">&#39;护照&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;法人证件代码&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;企业成立日期&#39;</span><span class="p">,</span> <span class="s1">&#39;20170821&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;登记开始日期&#39;</span><span class="p">,</span> <span class="s1">&#39;20170821&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;登记到期日期&#39;</span><span class="p">,</span> <span class="s1">&#39;20170821&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;国税登记证号&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;地税登记证号&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;是否上市&#39;</span><span class="p">,</span> <span class="s1">&#39;是&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;上市地&#39;</span><span class="p">,</span> <span class="s1">&#39;上海&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;股票代码&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;是否集团&#39;</span><span class="p">,</span> <span class="s1">&#39;是&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;经营类型&#39;</span><span class="p">,</span> <span class="s1">&#39;联营企业&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;合作类型&#39;</span><span class="p">,</span> <span class="s1">&#39;共管公司&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;关联类型&#39;</span><span class="p">,</span> <span class="s1">&#39;无&#39;</span><span class="p">)</span>
+        <span class="c1">#loanform.setvalue(&#39;所属集团&#39;, &#39;请选择&#39;)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;综合评级&#39;</span><span class="p">,</span> <span class="s1">&#39;AAA&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;资本金(元)&#39;</span><span class="p">,</span> <span class="s1">&#39;1,000,397.00&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;总资产&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;净资产&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;通讯地址&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;联系人&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;财务部电话&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;电话&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;传真&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;邮编&#39;</span><span class="p">,</span> <span class="s1">&#39;410082&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;邮箱&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397@qq.com&#39;</span><span class="p">)</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:确定&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">exceptioncheck</span><span class="p">(</span><span class="n">addwindow</span><span class="p">)</span>
+        <span class="n">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="s1">&#39;提示&#39;</span><span class="p">,</span><span class="s1">&#39;操作成功&#39;</span><span class="p">,</span><span class="s1">&#39;确定&#39;</span><span class="p">,</span><span class="s1">&#39;对手方新增&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="loanrival.modify"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.modify">[文档]</a>    <span class="k">def</span> <span class="nf">modify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="s1">&#39;对手简称&#39;</span><span class="p">,</span><span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:修改&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">switch_to_default_content</span><span class="p">()</span>
+        <span class="n">framelist</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getallframe</span><span class="p">(</span><span class="n">driver</span><span class="o">.</span><span class="n">driver</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">framelist</span><span class="p">)</span>
+        <span class="c1"># loanform.setvalue[&#39;对手简称&#39;]</span>
+
+        <span class="n">driver</span><span class="o">.</span><span class="n">switchtoframe</span><span class="p">(</span><span class="n">framelist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">addwindow</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:form,name:editForm&#39;</span><span class="p">)</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:重置&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">loanform</span> <span class="o">=</span> <span class="n">form</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">addwindow</span><span class="p">)</span>
+        <span class="c1"># loanform.printlabel()</span>
+
+        <span class="c1"># 外部评级机构 对手方选择</span>
+        <span class="n">loanform</span><span class="p">[</span><span class="s1">&#39;外部评级机构&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:following-sibling::i&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">loanformfloatwindow</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">loanwindow</span> <span class="o">=</span> <span class="n">chooseloanrival</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">loanformfloatwindow</span><span class="p">)</span>
+        <span class="n">loanwindow</span><span class="o">.</span><span class="n">fastserach</span><span class="p">(</span><span class="s1">&#39;136717&#39;</span><span class="p">,</span> <span class="s1">&#39;菲克力12138&#39;</span><span class="p">,</span> <span class="s1">&#39;非金融机构&#39;</span><span class="p">)</span>
+
+        <span class="c1"># #所属集团 对手方选择</span>
+        <span class="c1"># loanform[&#39;所属集团&#39;].getelementbyattribute(&#39;xpath:following-sibling::i&#39;).Click()</span>
+        <span class="c1"># chooseloanrival(driver,driver.getelementbyattribute(r&#39;xpath://child::div[@style=&quot;display: block;&quot;]/div[2]&#39;)).fastserach(&#39;136717&#39;, &#39;菲克力12138&#39;, &#39;非金融机构&#39;)</span>
+        <span class="c1"># #return</span>
+        <span class="c1"># driver.getelementbyattribute(&#39;tag name:button,text:确定&#39;).Click()</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手方名称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手类型&#39;</span><span class="p">,</span> <span class="s1">&#39;非金融机构&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;角色分类&#39;</span><span class="p">,</span> <span class="s1">&#39;抵、质押担保方&#39;</span><span class="p">)</span>
+        <span class="c1"># loanform.setvalue(&#39;对手性别&#39;, &#39;&#39;) # 属性隐藏</span>
+        <span class="c1"># loanform.setvalue(&#39;机构分类&#39;, &#39;产险公司&#39;) # 属性隐藏</span>
+        <span class="c1"># loanform.setvalue(&#39;出生日期&#39;, &#39;&#39;) # 属性隐藏</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;组织机构代码&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;社会信用代码&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;贷款卡号&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="c1"># loanform.setvalue(&#39;证件类型&#39;, &#39;&#39;) # 属性隐藏</span>
+        <span class="c1"># loanform.setvalue(&#39;证件号码&#39;, &#39;&#39;) # 属性隐藏</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;企业特征&#39;</span><span class="p">,</span> <span class="s1">&#39;大型企业&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;企业性质&#39;</span><span class="p">,</span> <span class="s1">&#39;企业法人(公司、非公司制企业法人)&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;行业分类&#39;</span><span class="p">,</span> <span class="s1">&#39;基础产业&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;明细分类&#39;</span><span class="p">,</span> <span class="s1">&#39;农业(大类)&#39;</span><span class="p">)</span>
+        <span class="c1"># loanform.setvalue(&#39;职业分类&#39;, &#39;政府部门&#39;) # 属性隐藏</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;归属国别&#39;</span><span class="p">,</span> <span class="s1">&#39;CHN:中华人民共和国&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;对手方子类&#39;</span><span class="p">,</span> <span class="s1">&#39;银行类&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;内部评级&#39;</span><span class="p">,</span> <span class="s1">&#39;AAA&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;外部评级&#39;</span><span class="p">,</span> <span class="s1">&#39;AAA&#39;</span><span class="p">)</span>
+        <span class="c1"># loanform.setvalue(&#39;外部评级机构&#39;, &#39;请选择&#39;)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;公司类型&#39;</span><span class="p">,</span> <span class="s1">&#39;内资企业&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;注册类型&#39;</span><span class="p">,</span> <span class="s1">&#39;工商注册号&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;登记注册号&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;注册资本&#39;</span><span class="p">,</span> <span class="s1">&#39;元&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;企业法人&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;法人证件类型&#39;</span><span class="p">,</span> <span class="s1">&#39;护照&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;法人证件代码&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;企业成立日期&#39;</span><span class="p">,</span> <span class="s1">&#39;20170821&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;登记开始日期&#39;</span><span class="p">,</span> <span class="s1">&#39;20170821&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;登记到期日期&#39;</span><span class="p">,</span> <span class="s1">&#39;20170821&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;国税登记证号&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;地税登记证号&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;是否上市&#39;</span><span class="p">,</span> <span class="s1">&#39;是&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;上市地&#39;</span><span class="p">,</span> <span class="s1">&#39;上海&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;股票代码&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;是否集团&#39;</span><span class="p">,</span> <span class="s1">&#39;是&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;经营类型&#39;</span><span class="p">,</span> <span class="s1">&#39;联营企业&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;合作类型&#39;</span><span class="p">,</span> <span class="s1">&#39;共管公司&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;关联类型&#39;</span><span class="p">,</span> <span class="s1">&#39;无&#39;</span><span class="p">)</span>
+        <span class="c1"># loanform.setvalue(&#39;所属集团&#39;, &#39;请选择&#39;)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;综合评级&#39;</span><span class="p">,</span> <span class="s1">&#39;AAA&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;资本金(元)&#39;</span><span class="p">,</span> <span class="s1">&#39;1,000,397.00&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;总资产&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;净资产&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;通讯地址&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;联系人&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;财务部电话&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;电话&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;传真&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;邮编&#39;</span><span class="p">,</span> <span class="s1">&#39;410082&#39;</span><span class="p">)</span>
+        <span class="n">loanform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;邮箱&#39;</span><span class="p">,</span> <span class="s1">&#39;1000397@qq.com&#39;</span><span class="p">)</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:确定&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">exceptioncheck</span><span class="p">(</span><span class="n">addwindow</span><span class="p">)</span>
+        <span class="n">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;提示&#39;</span><span class="p">,</span> <span class="s1">&#39;操作成功&#39;</span><span class="p">,</span> <span class="s1">&#39;确定&#39;</span><span class="p">,</span> <span class="s1">&#39;对手方修改&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="loanrival.delete"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.delete">[文档]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:删除&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="s1">&#39;提示&#39;</span><span class="p">,</span><span class="s1">&#39;您确定要删除对手方吗&#39;</span><span class="p">,</span><span class="s1">&#39;取消&#39;</span><span class="p">,</span><span class="s1">&#39;对手方删除&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:删除&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;提示&#39;</span><span class="p">,</span> <span class="s1">&#39;您确定要删除对手方吗&#39;</span><span class="p">,</span> <span class="s1">&#39;确定&#39;</span><span class="p">,</span> <span class="s1">&#39;对手方删除&#39;</span><span class="p">)</span>
+        <span class="n">htips</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="s1">&#39;操作成功&#39;</span><span class="p">);</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="loanrival.addstockholder"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.addstockholder">[文档]</a>    <span class="k">def</span> <span class="nf">addstockholder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:股东信息&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;][last()]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">mystockholder</span> <span class="o">=</span> <span class="n">Stockholderinfo</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">addwin</span><span class="p">)</span>
+        <span class="n">mystockholder</span><span class="o">.</span><span class="n">add</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="loanrival.modifystockholder"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.modifystockholder">[文档]</a>    <span class="k">def</span> <span class="nf">modifystockholder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:股东信息&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;][last()]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">mystockholder</span> <span class="o">=</span> <span class="n">Stockholderinfo</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">addwin</span><span class="p">)</span>
+        <span class="n">mystockholder</span><span class="o">.</span><span class="n">modify</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="loanrival.deletestockholder"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.deletestockholder">[文档]</a>    <span class="k">def</span> <span class="nf">deletestockholder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:股东信息&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;][last()]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">mystockholder</span> <span class="o">=</span> <span class="n">Stockholderinfo</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">addwin</span><span class="p">)</span>
+        <span class="n">mystockholder</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="loanrival.addmanager"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.addmanager">[文档]</a>    <span class="k">def</span> <span class="nf">addmanager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:高管信息&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;][last()]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">mystockholder</span> <span class="o">=</span> <span class="n">Stockholderinfo</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">addwin</span><span class="p">)</span>
+        <span class="n">mystockholder</span><span class="o">.</span><span class="n">add</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="loanrival.modifymanager"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.modifymanager">[文档]</a>    <span class="k">def</span> <span class="nf">modifymanager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:高管信息&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;][last()]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">mystockholder</span> <span class="o">=</span> <span class="n">Stockholderinfo</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">addwin</span><span class="p">)</span>
+        <span class="n">mystockholder</span><span class="o">.</span><span class="n">modify</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="loanrival.deletemanager"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.deletemanager">[文档]</a>    <span class="k">def</span> <span class="nf">deletemanager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;对手简称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:高管信息&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;][last()]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">mystockholder</span> <span class="o">=</span> <span class="n">Stockholderinfo</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">addwin</span><span class="p">)</span>
+        <span class="n">mystockholder</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="loanrival.rolemanageadd"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.rolemanageadd">[文档]</a>    <span class="k">def</span> <span class="nf">rolemanageadd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="s1">&#39;角色名称&#39;</span><span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:批量分配角色&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">addwin</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:取消&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:批量分配角色&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        
+        <span class="n">opbranch</span> <span class="o">=</span>  <span class="n">branchmanager</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">addwin</span><span class="p">)</span>
+        <span class="n">opbranch</span><span class="o">.</span><span class="n">search</span><span class="p">()</span>
+        <span class="n">opstr</span> <span class="o">=</span> <span class="s1">&#39;webui用户webui&#39;</span>     <span class="c1">#sendkey</span>
+        <span class="n">opbranch</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+        <span class="n">opbranch</span><span class="o">.</span><span class="n">branchadd</span><span class="p">(</span><span class="n">opstr</span><span class="p">)</span>
+        <span class="n">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="s1">&#39;提示&#39;</span><span class="p">,</span><span class="s1">&#39;操作成功&#39;</span><span class="p">,</span><span class="s1">&#39;确定&#39;</span><span class="p">,</span><span class="s1">&#39;批量分配角色&#39;</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="loanrival.rolemanagedel"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.rolemanagedel">[文档]</a>    <span class="k">def</span> <span class="nf">rolemanagedel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="s1">&#39;部门简称&#39;</span><span class="p">,</span><span class="s1">&#39;二级部门&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:部门经理指定&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;]/div[2]&#39;</span><span class="p">)</span>
+        <span class="n">addwin</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:取消&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downwindow</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:部门经理指定&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        
+        <span class="n">opbranch</span> <span class="o">=</span>  <span class="n">branchmanager</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">addwin</span><span class="p">)</span>
+        <span class="n">opbranch</span><span class="o">.</span><span class="n">search</span><span class="p">()</span>
+        <span class="n">opstr</span> <span class="o">=</span> <span class="s1">&#39;webui用户webui&#39;</span>     <span class="c1">#sendkey</span>
+        <span class="n">opbranch</span><span class="o">.</span><span class="n">branchdelet</span><span class="p">(</span><span class="n">opstr</span><span class="p">)</span>
+        <span class="n">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="s1">&#39;提示&#39;</span><span class="p">,</span><span class="s1">&#39;操作成功&#39;</span><span class="p">,</span><span class="s1">&#39;确定&#39;</span><span class="p">,</span><span class="s1">&#39;部门管理员任命&#39;</span><span class="p">)</span>
+        <span class="n">clicktable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">grid9</span><span class="o">=</span><span class="n">buttonmenu</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:角色分配&#39;</span><span class="p">)</span>
+        <span class="n">grid9</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;id:logoutWin&quot;</span><span class="p">)</span>
+        <span class="n">addwin</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:取消&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">clicktable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="loanrival.login"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.loanrival.login">[文档]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+        <span class="n">clicktable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">grid9</span><span class="o">=</span><span class="n">buttonmenu</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:修改&#39;</span><span class="p">)</span>
+        <span class="n">grid9</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">addwin</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:/html/body/child::div[@style=&quot;display: block;&quot;]/div[2]&#39;</span><span class="p">)</span>
+        <span class="c1">#/html/body/descendant::label[@title=&quot;部门编号&quot;]/following-sibling::*/descendant::*/input[last()]</span>
+        <span class="n">a</span><span class="o">=</span><span class="n">addwin</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:descendant::label[@title=&quot;部门编号&quot;]/following-sibling::*/descendant::*/input[last()]&#39;</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s2">&quot;id:ztree_vc_branch_id_edit_1_span&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="c1">#addwin.getelementbyattribute(r&#39;xpath:descendant::label[@title=&quot;部门编号&quot;]/following-sibling::*/descendant::*/input[last()]&#39;).sendkeys(&quot;webui&quot;)</span>
+        <span class="n">addwin</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:descendant::label[@title=&quot;用户名称&quot;]/following-sibling::*/descendant::*/input[last()]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s2">&quot;webui&quot;</span><span class="p">)</span>
+        <span class="n">addwin</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:descendant::label[@title=&quot;用户别名&quot;]/following-sibling::*/descendant::*/input[last()]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s2">&quot;webui&quot;</span><span class="p">)</span>
+    
+        <span class="n">exceptioncheck</span><span class="p">(</span><span class="n">addwin</span><span class="p">)</span>
+        <span class="n">addwin</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:确定&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">confirmwin</span><span class="o">=</span><span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;xpath:.//*[@id=&#39;h_msg_floatdiv&#39;]&quot;</span><span class="p">)</span> <span class="c1">#获取弹出的窗体</span>
+        <span class="n">confirmwin</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;xpath:.//div[2]/div/div,text:请您确认是否提交？&quot;</span><span class="p">)</span>
+        <span class="n">confirmwin</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:确定&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="c1">#addwin.getelementbyattribute(&#39;tag name:button,text:取消&#39;).Click()</span>
+        <span class="n">htip</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;xpath://div[@class=&#39;h_tips&#39;]&quot;</span><span class="p">)</span>
+        <span class="n">htip</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:div,text:操作成功！&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;操作成功&quot;</span><span class="p">)</span>
+        <span class="n">clicktable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div></div>
+        <span class="c1">#driver.close()</span>
+        <span class="c1">#return &#39;Pass&#39;,&#39;&#39;</span>
+
+
+<div class="viewcode-block" id="Stockholderinfo"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.Stockholderinfo">[文档]</a><span class="k">class</span> <span class="nc">Stockholderinfo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">driver</span><span class="p">,</span><span class="n">window</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">driver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
+
+<div class="viewcode-block" id="Stockholderinfo.add"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.Stockholderinfo.add">[文档]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:新增&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1">#addwin = driver.getelementbyattribute(r&quot;xpath:.//*[@id=&#39;addWin&#39;]&quot;,getall =True)[-1]</span>
+
+        <span class="n">addwin</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;][last()]/div[2]&#39;</span><span class="p">)</span>
+        <span class="c1">#print(len(a))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span> <span class="o">=</span> <span class="n">form</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span><span class="n">addwin</span><span class="p">)</span>
+        <span class="c1">#addwin.getelementbyattribute(&#39;tag name:button,text:确定&#39;).Click()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">readonly</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="p">[</span><span class="s1">&#39;对手方&#39;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s1">&#39;对手方字段非只读&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;股东名称&#39;</span><span class="p">,</span><span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;股东类别&#39;</span><span class="p">,</span><span class="s1">&#39;1:个人&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;关联关系&#39;</span><span class="p">,</span><span class="s1">&#39;1:大股东&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;证件类型&#39;</span><span class="p">,</span><span class="s1">&#39;11:户口簿&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;证件号码&#39;</span><span class="p">,</span><span class="s1">&#39;1231231213&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;持股比例(%)&#39;</span><span class="p">,</span><span class="s1">&#39;12&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s1">&#39;确定&#39;</span><span class="p">)</span>
+        <span class="c1"># 弹出提示信息begin</span>
+        <span class="n">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;提示&#39;</span><span class="p">,</span> <span class="s1">&#39;操作成功&#39;</span><span class="p">,</span> <span class="s1">&#39;确定&#39;</span><span class="p">,</span> <span class="s1">&#39;股东信息新增&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Stockholderinfo.modify"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.Stockholderinfo.modify">[文档]</a>    <span class="k">def</span> <span class="nf">modify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span><span class="s1">&#39;股东名称&#39;</span><span class="p">,</span><span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:修改&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># addwin = driver.getelementbyattribute(r&quot;xpath:.//*[@id=&#39;addWin&#39;]&quot;,getall =True)[-1]</span>
+
+        <span class="n">addwin</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath://child::div[@style=&quot;display: block;&quot;][last()]/div[2]&#39;</span><span class="p">)</span>
+        <span class="c1"># print(len(a))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span> <span class="o">=</span> <span class="n">form</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="n">addwin</span><span class="p">)</span>
+        <span class="c1"># addwin.getelementbyattribute(&#39;tag name:button,text:确定&#39;).Click()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">readonly</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="p">[</span><span class="s1">&#39;对手方&#39;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumExceptions</span><span class="p">(</span><span class="s1">&#39;对手方字段非只读&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;股东名称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;股东类别&#39;</span><span class="p">,</span> <span class="s1">&#39;1:个人&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;关联关系&#39;</span><span class="p">,</span> <span class="s1">&#39;1:大股东&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;证件类型&#39;</span><span class="p">,</span> <span class="s1">&#39;11:户口簿&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;证件号码&#39;</span><span class="p">,</span> <span class="s1">&#39;1231231213&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="s1">&#39;持股比例(%)&#39;</span><span class="p">,</span> <span class="s1">&#39;12&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subform</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s1">&#39;确定&#39;</span><span class="p">)</span>
+        <span class="c1"># 弹出提示信息begin</span>
+        <span class="n">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;提示&#39;</span><span class="p">,</span> <span class="s1">&#39;操作成功&#39;</span><span class="p">,</span> <span class="s1">&#39;确定&#39;</span><span class="p">,</span> <span class="s1">&#39;股东信息修改&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Stockholderinfo.delete"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.Stockholderinfo.delete">[文档]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">SelectListData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="s1">&#39;股东名称&#39;</span><span class="p">,</span> <span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;link text:删除&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">msgfloat</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s1">&#39;提示&#39;</span><span class="p">,</span> <span class="s1">&#39;您确定要删除股东吗&#39;</span><span class="p">,</span> <span class="s1">&#39;确定&#39;</span><span class="p">,</span> <span class="s1">&#39;股东信息删除&#39;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="branchmanager"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.branchmanager">[文档]</a><span class="k">class</span>  <span class="nc">branchmanager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">driver</span><span class="p">,</span><span class="n">window</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">driver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
+        <span class="n">container</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;css selector:.sortable_container&#39;</span><span class="p">)</span>
+        <span class="n">divlist</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:div&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divletf</span> <span class="o">=</span> <span class="n">divlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divadd</span> <span class="o">=</span> <span class="n">divlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divdel</span> <span class="o">=</span> <span class="n">divlist</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divrigt</span> <span class="o">=</span> <span class="n">divlist</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allchooseleft</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">divletf</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:.//span[text()=&quot;列名&quot;]/preceding-sibling::input&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allchooseright</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">divrigt</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;xpath:.//span[text()=&quot;列名&quot;]/preceding-sibling::input&#39;</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="branchmanager.getunchooselist"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.branchmanager.getunchooselist">[文档]</a>    <span class="k">def</span> <span class="nf">getunchooselist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span> <span class="p">:</span>
+            <span class="n">temp1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">divletf</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:li&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">unchooselit</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:input,type:checkbox&#39;</span><span class="p">),</span><span class="n">x</span><span class="o">.</span><span class="n">gettext</span><span class="p">())</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">temp1</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">unchooselit</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">unchooselit</span></div>
+
+<div class="viewcode-block" id="branchmanager.getchooselist"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.branchmanager.getchooselist">[文档]</a>    <span class="k">def</span> <span class="nf">getchooselist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span> <span class="p">:</span>
+            <span class="n">temp2</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">divrigt</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:li&#39;</span><span class="p">,</span><span class="n">getall</span> <span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">chooselit</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:input,type:checkbox&#39;</span><span class="p">),</span><span class="n">x</span><span class="o">.</span><span class="n">gettext</span><span class="p">())</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">temp2</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">:</span>
+            <span class="n">chooselit</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">chooselit</span></div>
+    
+<div class="viewcode-block" id="branchmanager.search"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.branchmanager.search">[文档]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:descendant::label[@title=&quot;用户编号&quot;]/following-sibling::*/descendant::*/input[last()]&#39;</span><span class="p">)</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:descendant::label[@title=&quot;用户名称&quot;]/following-sibling::*/descendant::*/input[last()]&#39;</span><span class="p">)</span>
+        <span class="n">v3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:descendant::label[@title=&quot;部门名称&quot;]/following-sibling::*/descendant::*/input[last()]&#39;</span><span class="p">)</span> 
+        <span class="n">v1</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">v1</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>  
+        <span class="n">v2</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">v2</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">v3</span><span class="o">.</span><span class="n">sendkeys</span><span class="p">(</span><span class="s1">&#39;webUI&#39;</span><span class="p">)</span>
+        <span class="c1">#b = driver.getelementbyattribute(&#39;id:hc_hide_div-tree-vc_branch_id_opbquery1&#39;)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;css selector:.hc_selectbox-tree-div,style:[\s\S]*display: block;[\s\S]*&#39;</span><span class="p">)</span>
+       
+        <span class="n">c</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;xpath:descendant::a[@title=&quot;&#39;</span><span class="o">+</span><span class="s1">&#39;webUI&#39;</span><span class="o">+</span><span class="s1">&#39;&quot;]/preceding-sibling::span[last()-1]&#39;</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:查询&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span></div>
+<div class="viewcode-block" id="branchmanager.branchadd"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.branchmanager.branchadd">[文档]</a>    <span class="k">def</span> <span class="nf">branchadd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">opstr</span><span class="p">):</span>
+
+        <span class="n">oplist</span> <span class="o">=</span> <span class="n">opstr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">unchooselist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getunchooselist</span><span class="p">()</span>
+        <span class="n">chooselist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getchooselist</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unchooselist&#39;</span><span class="p">,</span><span class="n">unchooselist</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;chooselist&#39;</span><span class="p">,</span><span class="n">unchooselist</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">oplist</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">unchooselist</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="s1">&#39;vs&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+                    <span class="k">continue</span>
+                <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;添加用户:未找到对应用户:&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divadd</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">afterunchooselist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getunchooselist</span><span class="p">()</span>
+        <span class="n">afterchooselist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getchooselist</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unchooselist</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">afterunchooselist</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">oplist</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">afterchooselist</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">chooselist</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">oplist</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">oplist</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">afterchooselist</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="k">continue</span>
+                    <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;添加用户:已选列表未包含对应用户:&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">oplist</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">afterunchooselist</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;添加用户:未选列表仍包含对应用户:&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;添加用户:添加用户已选和未选数量变化不正确&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:确定&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>    </div>
+<div class="viewcode-block" id="branchmanager.branchdelet"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.branchmanager.branchdelet">[文档]</a>    <span class="k">def</span> <span class="nf">branchdelet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">opstr</span><span class="p">):</span>
+        <span class="n">oplist</span> <span class="o">=</span> <span class="n">opstr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="c1"># 为了简化修改，和add保持一致，把list数据进行对掉</span>
+        <span class="n">chooselist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getunchooselist</span><span class="p">()</span>
+        <span class="n">unchooselist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getchooselist</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">oplist</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">unchooselist</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;找到了&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+                    <span class="k">continue</span>
+                <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;添加用户:未找到对应用户:&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divdel</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">afterchooselist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getunchooselist</span><span class="p">()</span>
+        <span class="n">afterunchooselist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getchooselist</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unchooselist</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">afterunchooselist</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">oplist</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">afterchooselist</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">chooselist</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">oplist</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">oplist</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">afterchooselist</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="k">continue</span>
+                    <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;添加用户:已选列表未包含对应用户:&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">oplist</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">afterunchooselist</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;添加用户:未选列表仍包含对应用户:&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;添加用户:添加用户已选和未选数量变化不正确&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:确定&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span></div>
+<div class="viewcode-block" id="branchmanager.clear"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.branchmanager.clear">[文档]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">getelementbyattribute</span><span class="p">(</span><span class="s1">&#39;tag name:button,text:清空&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">chooselist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getchooselist</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chooselist</span><span class="p">)</span> <span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ClassSelenium</span><span class="o">.</span><span class="n">SeleniumError</span><span class="p">(</span><span class="s1">&#39;清空用户信息:清空失败&#39;</span><span class="p">)</span></div>
+  
+<div class="viewcode-block" id="branchmanager.check"><a class="viewcode-back" href="../../Lib.html#Lib.loanrival.branchmanager.check">[文档]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divadd</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">htips</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span><span class="s1">&#39;请至少选择一条记录&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">divdel</span><span class="o">.</span><span class="n">Click</span><span class="p">()</span>
+        <span class="n">htips</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span><span class="s1">&#39;请至少选择一条记录&#39;</span><span class="p">)</span></div></div>
+
+
+   
+      
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">init</span><span class="p">()</span>
+    <span class="c1">#beginform = driver.getallframe(driver.driver)</span>
+    <span class="n">role1</span> <span class="o">=</span><span class="n">loanrival</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+    <span class="c1">#role1.search()</span>
+    <span class="n">role1</span><span class="o">.</span><span class="n">deletestockholder</span><span class="p">()</span>
+    <span class="c1">#role1.add()</span>
+    <span class="c1">#role1.modify()</span>
+    <span class="c1">#role1.delete()</span>
+    <span class="c1">#role1.rolemanageadd()</span>
+    <span class="c1">#role1.delete()</span>
+    
+    <span class="c1">#role1.end()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">bladedoc</a></h1>
+
+
+
+
+
+
+
+
+<h3>导航</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">模块代码</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Niucx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
